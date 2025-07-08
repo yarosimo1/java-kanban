@@ -1,4 +1,6 @@
-import java.util.ArrayList;
+import manager.TaskManager;
+import task.*;
+
 
 public class Main {
 
@@ -6,25 +8,25 @@ public class Main {
         
         TaskManager taskManager = new TaskManager();
 
-        //Task задачи
+        //task.Task задачи
         Task task = new Task("Task", "new Task");
         Task task1 = new Task("Task1", "new Task1");
         taskManager.createTask(task);
         taskManager.createTask(task1);
 
-        //Epic задачи
+        //task.Epic задачи
         Epic epic = new Epic("Epic", "new Epic");
         Epic epic1 = new Epic("Epic1", "new Epic1");
         taskManager.createEpic(epic);
         taskManager.createEpic(epic1);
 
-        //SubTask задачи для epic
+        //task.SubTask задачи для epic
         SubTask subTaskForEpic = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
         SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
         taskManager.createSubTask(subTaskForEpic);
         taskManager.createSubTask(subTaskForEpic1);
 
-        //SubTask задачи для epic1
+        //task.SubTask задачи для epic1
         SubTask subTaskForEpic2 = new SubTask("SubTaskForEpic1", "new SubTaskForEpic1");
         taskManager.createSubTask(subTaskForEpic2);
 
