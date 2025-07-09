@@ -16,16 +16,16 @@ public class TaskManager {
         subTasks.clear();
     }
 
-    public HashMap<Integer, Task> getAllTasks() {
-        return tasks;
+    public ArrayList<Task> getAllTasks() {
+        return new ArrayList<>(tasks.values());
     }
 
-    public HashMap<Integer, Epic> getAllEpicTasks() {
-        return epicTasks;
+    public ArrayList<Epic> getAllEpicTasks() {
+        return new ArrayList<>(epicTasks.values());
     }
 
-    public HashMap<Integer, SubTask> getAllSubTasks() {
-        return subTasks;
+    public ArrayList<SubTask> getAllSubTasks() {
+        return new ArrayList<>(subTasks.values());
     }
 
     public Task getTaskByID(int idTask) {
@@ -130,7 +130,7 @@ public class TaskManager {
             Epic epic = sub.getEpic();
             if (epic != null) {
                 epic.removeSubTask(sub);
-                updateEpic(epic);
+                updateEpicStatus(epic);
             }
             subTasks.remove(idTask);
         }
