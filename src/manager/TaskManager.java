@@ -10,10 +10,26 @@ public class TaskManager {
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private int idTask = 0;
 
-    public void deleteAllTasks() {
+    public void clearTasks() {
         tasks.clear();
+    }
+
+    public void clearEpicTasks() {
         epicTasks.clear();
-        subTasks.clear();
+    }
+
+    public void clearSubTasks() {
+        Epic epic;
+        for (SubTask subTask : subTasks.values()) {
+            if (subTask != null) {
+                epic = subTask.getEpic();
+
+                if (epic != null) {
+                    epic.clearSubTasks();
+                    updateEpicStatus(epic);
+                }
+            }
+        }
     }
 
     public ArrayList<Task> getAllTasks() {
