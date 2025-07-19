@@ -15,10 +15,9 @@ class ManagersTest {
 
     @Test
     void createTask() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefaultTaskManager();
         Task task = new Task("Test addNewTask", "Test addNewTask description");
-        taskManager.createTask(task);
-        final int taskId = task.getID();
+        final int taskId = taskManager.createTask(task).getID();
 
         final Task savedTask = taskManager.getTaskByID(taskId);
 
@@ -34,10 +33,9 @@ class ManagersTest {
 
     @Test
     void createEpic() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefaultTaskManager();
         Epic task = new Epic("Test addNewTask", "Test addNewTask description");
-        taskManager.createTask(task);
-        final int taskId = task.getID();
+        final int taskId = taskManager.createTask(task).getID();
 
         final Task savedTask = taskManager.getTaskByID(taskId);
 
@@ -53,10 +51,9 @@ class ManagersTest {
 
     @Test
     void createSubTask() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefaultTaskManager();
         SubTask task = new SubTask("Test addNewTask", "Test addNewTask description");
-        taskManager.createTask(task);
-        final int taskId = task.getID();
+        final int taskId = taskManager.createTask(task).getID();
 
         final Task savedTask = taskManager.getTaskByID(taskId);
 
@@ -72,7 +69,7 @@ class ManagersTest {
 
     @Test
     void managersReturnReadyForWorkManagers() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefaultTaskManager();
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
 
         assertNotNull(taskManager, "Менеджер задач не возвращается.");
@@ -81,18 +78,14 @@ class ManagersTest {
 
     @Test
     void InMemoryTaskManagerCanFindTasksByID() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefaultTaskManager();
         Task task = new Task("Test addNewTask", "Test addNewTask description");
         Epic epicTask = new Epic("Test addNewTask", "Test addNewTask description");
         SubTask subTask = new SubTask("Test addNewTask", "Test addNewTask description");
 
-        taskManager.createTask(task);
-        taskManager.createTask(epicTask);
-        taskManager.createSubTask(subTask);
-
-        final int taskID = task.getID();
-        final int epicTaskID = epicTask.getID();
-        final int subTaskID = epicTask.getID();
+        final int taskID = taskManager.createTask(task).getID();
+        final int epicTaskID = taskManager.createTask(epicTask).getID();
+        final int subTaskID = taskManager.createSubTask(subTask).getID();
 
         LinkedList<Task> tasks = new LinkedList<>();
         tasks.add(taskManager.getTaskByID(taskID));
@@ -104,7 +97,7 @@ class ManagersTest {
 
     @Test
     void CehkingEachTaskField() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefaultTaskManager();
         Task task = new Task("Test addNewTask", "Test addNewTask description");
         taskManager.createTask(task);
 
@@ -124,18 +117,20 @@ class ManagersTest {
 
     @Test
     void CehkingTaskBeforeUpdating() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefaultTaskManager();
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
 
         Task task = new Task("Test addNewTask", "Test addNewTask description");
-        historyManager.addElementInHistiryList(task);
+        historyManager.add(task);
 
-        task = new Task("Task after update", "Test addNewTask description");
+        task = new Task("Task after update", "Test addUpdateTask description");
         taskManager.updateTask(task);
-        historyManager.addElementInHistiryList(task);
+        historyManager.add(task);
 
         LinkedList<Task> tasks = historyManager.getHistory();
 
-        assertNotEquals(tasks.get(0), tasks.get(1));
+        assertEquals(tasks.get(0), tasks.get(1), "Поля id не совпадают");
+        assertEquals(tasks.get(0).getTaskName(), tasks.get(1).getTaskName(), "Поля taskName совпадают");
+        assertEquals(tasks.get(0).getDescription(), tasks.get(1).getDescription(), "Поля description совпадают");
     }
 }

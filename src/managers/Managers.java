@@ -1,15 +1,12 @@
 package managers;
 
-public class Managers {
-
-    private Managers() {}
-
-   public static  HistoryManager getDefaultHistoryManager() {
+public abstract class Managers {
+    public static HistoryManager getDefaultHistoryManager() {
         return new InMemoryHistoryManager();
-   }
+    }
 
-   public static  TaskManager  getDefault() {
+    public static TaskManager getDefaultTaskManager() {
         return new InMemoryTaskManager();
-   }
+    }
 
 }

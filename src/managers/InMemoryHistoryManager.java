@@ -5,7 +5,7 @@ import task.Task;
 import java.util.LinkedList;
 
 public class InMemoryHistoryManager implements HistoryManager {
-
+    private static final byte MAXSIZE = 10;
     private static LinkedList<Task> historyList = new LinkedList<>();
 
     @Override
@@ -14,10 +14,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void addElementInHistiryList(Task task) {
-        byte maxsize = 10;
-
-        if (historyList.size() > maxsize) {
+    public void add(Task task) {
+        if (historyList.size() > MAXSIZE) {
             historyList.removeFirst();
         } else {
             historyList.add(task);

@@ -7,13 +7,12 @@ public class SubTask extends Task {
         super(taskName, description);
     }
 
+    public Epic getEpic() {
+        return epic;
+    }
 
     public void setEpic(Epic epic) {
         this.epic = epic;
-    }
-
-    public Epic getEpic() {
-        return epic;
     }
 }
 

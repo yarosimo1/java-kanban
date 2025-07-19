@@ -25,17 +25,17 @@ public interface TaskManager {
 
     SubTask getSubTaskByID(int idTask);
 
-    void createTask(Task task);
+    Task createTask(Task task);
 
-    void createEpic(Epic task);
+    Epic createEpic(Epic task);
 
-    void createSubTask(SubTask task);
+    SubTask createSubTask(SubTask task);
 
-    void updateTask(Task task);
+    Task updateTask(Task task);
 
-    void updateEpic(Epic task);
+    Epic updateEpic(Epic task);
 
-    void updateSubTask(SubTask task);
+    SubTask updateSubTask(SubTask task);
 
     void removeTaskByID(int idTask);
 

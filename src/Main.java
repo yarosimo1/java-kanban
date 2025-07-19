@@ -9,8 +9,7 @@ import task.TaskStatus;
 public class Main {
 
     public static void main(String[] args) {
-
-        TaskManager manager = Managers.getDefault();
+        TaskManager manager = Managers.getDefaultTaskManager();
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
 
         //task.Task задачи
@@ -75,26 +74,23 @@ public class Main {
         System.out.println(manager.getSubTaskByID(5));
         System.out.println(manager.getSubTaskByID(6));
 
-//        //Удаляем task
-//        manager.removeTaskByID(0);
-//
-//        //Удаляем subTaskForEpic2
-//        manager.removeSubTaskByID(5);
-//
-//        //Удаляем epic
-//        manager.removeEpicByID(3);
-//
-//        System.out.println();
-//        System.out.println("----- Задачи после удаления -----");
-//        System.out.println(manager.getTaskByID(0));
-//        System.out.println(manager.getTaskByID(1));
-//        System.out.println(manager.getEpicByID(2));
-//        System.out.println(manager.getEpicByID(3));
-//        System.out.println(manager.getSubTaskByID(4));
-//        System.out.println(manager.getSubTaskByID(5));
-//        System.out.println(manager.getSubTaskByID(6));
+        //Удаляем task
+        manager.removeTaskByID(0);
+
+        //Удаляем subTaskForEpic2
+        manager.removeSubTaskByID(5);
+
+        //Удаляем epic
+        manager.removeEpicByID(3);
 
         System.out.println();
-        System.out.println(historyManager.getHistory());
+        System.out.println("----- Задачи после удаления -----");
+        System.out.println(manager.getTaskByID(0));
+        System.out.println(manager.getTaskByID(1));
+        System.out.println(manager.getEpicByID(2));
+        System.out.println(manager.getEpicByID(3));
+        System.out.println(manager.getSubTaskByID(4));
+        System.out.println(manager.getSubTaskByID(5));
+        System.out.println(manager.getSubTaskByID(6));
     }
 }

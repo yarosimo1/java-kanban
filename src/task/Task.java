@@ -3,10 +3,10 @@ package task;
 import java.util.Objects;
 
 public class Task {
-    protected String taskName;
-    protected String description;
-    protected int ID;
-    protected TaskStatus taskStatus;
+    private String taskName;
+    private String description;
+    private int id;
+    private TaskStatus taskStatus;
 
     public Task(String taskName, String description) {
         this.taskName = taskName;
@@ -20,7 +20,7 @@ public class Task {
                 "taskName='" + taskName + '\'' +
                 ", description='" + description + '\'' +
                 ", taskStatus='" + taskStatus + '\'' +
-                ", ID=" + ID +
+                ", id=" + id +
                 '}';
     }
 
@@ -28,19 +28,20 @@ public class Task {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return ID == task.ID &&
-                Objects.equals(taskName, task.taskName) &&
-                Objects.equals(description, task.description) &&
-                taskStatus == task.taskStatus;
+        return id == task.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(taskName, description, ID, taskStatus);
+        return Objects.hash(id);
     }
 
     public int getID() {
-        return ID;
+        return id;
+    }
+
+    public void setID(int ID) {
+        this.id = ID;
     }
 
     public String getTaskName() {
@@ -65,9 +66,5 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
 }
