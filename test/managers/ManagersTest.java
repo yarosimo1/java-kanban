@@ -7,6 +7,7 @@ import task.Task;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -127,7 +128,7 @@ class ManagersTest {
         taskManager.updateTask(task);
         historyManager.add(task);
 
-        LinkedList<Task> tasks = historyManager.getHistory();
+        List<Task> tasks = historyManager.getHistory();
 
         assertEquals(tasks.get(0), tasks.get(1), "Поля id не совпадают");
         assertEquals(tasks.get(0).getTaskName(), tasks.get(1).getTaskName(), "Поля taskName совпадают");
