@@ -18,7 +18,7 @@ class ManagersTest {
     void createTask() {
         TaskManager taskManager = Managers.getDefaultTaskManager();
         Task task = new Task("Test addNewTask", "Test addNewTask description");
-        final int taskId = taskManager.createTask(task).getID();
+        final int taskId = taskManager.createTask(task).getId();
 
         final Task savedTask = taskManager.getTaskByID(taskId);
 
@@ -36,7 +36,7 @@ class ManagersTest {
     void createEpic() {
         TaskManager taskManager = Managers.getDefaultTaskManager();
         Epic task = new Epic("Test addNewTask", "Test addNewTask description");
-        final int taskId = taskManager.createTask(task).getID();
+        final int taskId = taskManager.createTask(task).getId();
 
         final Task savedTask = taskManager.getTaskByID(taskId);
 
@@ -54,7 +54,7 @@ class ManagersTest {
     void createSubTask() {
         TaskManager taskManager = Managers.getDefaultTaskManager();
         SubTask task = new SubTask("Test addNewTask", "Test addNewTask description");
-        final int taskId = taskManager.createTask(task).getID();
+        final int taskId = taskManager.createTask(task).getId();
 
         final Task savedTask = taskManager.getTaskByID(taskId);
 
@@ -84,9 +84,9 @@ class ManagersTest {
         Epic epicTask = new Epic("Test addNewTask", "Test addNewTask description");
         SubTask subTask = new SubTask("Test addNewTask", "Test addNewTask description");
 
-        final int taskID = taskManager.createTask(task).getID();
-        final int epicTaskID = taskManager.createTask(epicTask).getID();
-        final int subTaskID = taskManager.createSubTask(subTask).getID();
+        final int taskID = taskManager.createTask(task).getId();
+        final int epicTaskID = taskManager.createTask(epicTask).getId();
+        final int subTaskID = taskManager.createSubTask(subTask).getId();
 
         LinkedList<Task> tasks = new LinkedList<>();
         tasks.add(taskManager.getTaskByID(taskID));
@@ -102,8 +102,8 @@ class ManagersTest {
         Task task = new Task("Test addNewTask", "Test addNewTask description");
         taskManager.createTask(task);
 
-        assertEquals(task.getID(),
-                taskManager.getTaskByID(0).getID(),
+        assertEquals(task.getId(),
+                taskManager.getTaskByID(0).getId(),
                 "Поля не совподают");
         assertEquals(task.getTaskName(),
                 taskManager.getTaskByID(0).getTaskName(),

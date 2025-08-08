@@ -22,7 +22,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void add(Task task) {
         if (task == null) return;
 
-        remove(task.getID());
+        remove(task.getId());
         linkLast(task);
     }
 
@@ -42,7 +42,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             head = newNode;
         }
         tail = newNode;
-        history.put(task.getID(), newNode);
+        history.put(task.getId(), newNode);
     }
 
     private void removeNode(Node<Task> node) {
@@ -63,7 +63,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             tail = prevNode;
         }
 
-        history.remove(node.data.getID());
+        history.remove(node.data.getId());
     }
 
     private List<Task> getTasks() {
