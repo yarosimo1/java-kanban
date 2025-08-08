@@ -1,5 +1,6 @@
 package managers;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.SubTask;
@@ -30,6 +31,7 @@ class ManagersTest {
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
+        taskManager.removeTaskByID(taskId);
     }
 
     @Test
@@ -48,6 +50,7 @@ class ManagersTest {
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
+        taskManager.removeEpicByID(taskId);
     }
 
     @Test
@@ -66,6 +69,7 @@ class ManagersTest {
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
+        taskManager.removeSubTaskByID(taskId);
     }
 
     @Test
@@ -94,6 +98,10 @@ class ManagersTest {
         tasks.add(taskManager.getSubTaskByID(subTaskID));
 
         assertEquals(3, tasks.size(), "Неверное количество задач.");
+        taskManager.removeTaskByID(taskID);
+        taskManager.removeEpicByID(epicTaskID);
+        taskManager.removeSubTaskByID(subTaskID);
+
     }
 
     @Test
@@ -114,6 +122,8 @@ class ManagersTest {
         assertEquals(task.getDescription(),
                 taskManager.getTaskByID(0).getDescription(),
                 "Поля не совпадают");
+
+        taskManager.removeTaskByID(task.getId());
     }
 
     @Test
@@ -122,17 +132,15 @@ class ManagersTest {
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
 
         Task task = new Task("Test addNewTask", "Test addNewTask description");
-        historyManager.add(task);
+        taskManager.getTaskByID(task.getId());
 
         task = new Task("Task after update", "Test addUpdateTask description");
         taskManager.updateTask(task);
-        historyManager.add(task);
+        taskManager.getTaskByID(task.getId());
 
-        List<Task> tasks = historyManager.getHistory();
 
-        assertEquals(tasks.get(0), tasks.get(1), "Поля id не совпадают");
-        assertEquals(tasks.get(0).getTaskName(), tasks.get(1).getTaskName(), "Поля taskName совпадают");
-        assertEquals(tasks.get(0).getDescription(), tasks.get(1).getDescription(), "Поля description совпадают");
+        assertEquals(1, historyManager.getHistory().size(), "количество задач изменилось");
+        taskManager.removeTaskByID(0);
     }
 
     @Test
@@ -142,26 +150,14 @@ class ManagersTest {
 
         //task.Epic задачи
         Epic epic = new Epic("Epic", "new Epic");
-        Epic epic1 = new Epic("Epic1", "new Epic1");
         manager.createEpic(epic);
-        manager.createEpic(epic1);
-
-        //task.SubTask задачи для epic
-        SubTask subTaskForEpic = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
-        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
-        manager.createSubTask(subTaskForEpic);
-        manager.createSubTask(subTaskForEpic1);
-
-        //Добавляем в epic подзадачи
-        epic.addSubTask(subTaskForEpic);
-        epic.addSubTask(subTaskForEpic1);
 
         manager.getEpicByID(0);
 
-        final ArrayList<Task> history = new ArrayList<>(historyManager.getHistory());
+        assertNotNull(historyManager.getHistory(), "список истории не заполняется");
+        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
 
-        assertNotNull(history, "список истории не заполняется");
-        assertEquals(1, history.size(), "Неверное количество задач.");
+        manager.removeEpicByID(epic.getId());
     }
 
     @Test
@@ -195,6 +191,8 @@ class ManagersTest {
         manager.removeEpicByID(0);
 
         assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
+
+        manager.removeEpicByID(epic1.getId());
     }
 
     @Test
@@ -213,8 +211,10 @@ class ManagersTest {
 
         assertEquals(2, historyManager.getHistory().size(), "Неверное количество задач.");
 
-        historyManager.remove(0);
+        manager.removeEpicByID(0);
 
         assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
+
+        manager.removeEpicByID(1);
     }
 }
