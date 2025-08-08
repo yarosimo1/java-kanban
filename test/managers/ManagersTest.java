@@ -97,7 +97,7 @@ class ManagersTest {
     }
 
     @Test
-    void CehkingEachTaskField() {
+    void cehkingEachTaskField() {
         TaskManager taskManager = Managers.getDefaultTaskManager();
         Task task = new Task("Test addNewTask", "Test addNewTask description");
         taskManager.createTask(task);
@@ -117,7 +117,7 @@ class ManagersTest {
     }
 
     @Test
-    void CehkingTaskBeforeUpdating() {
+    void cehkingTaskBeforeUpdating() {
         TaskManager taskManager = Managers.getDefaultTaskManager();
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
 
@@ -133,5 +133,88 @@ class ManagersTest {
         assertEquals(tasks.get(0), tasks.get(1), "Поля id не совпадают");
         assertEquals(tasks.get(0).getTaskName(), tasks.get(1).getTaskName(), "Поля taskName совпадают");
         assertEquals(tasks.get(0).getDescription(), tasks.get(1).getDescription(), "Поля description совпадают");
+    }
+
+    @Test
+    void chekListHistoryField() {
+        TaskManager manager = Managers.getDefaultTaskManager();
+        HistoryManager historyManager = Managers.getDefaultHistoryManager();
+
+        //task.Epic задачи
+        Epic epic = new Epic("Epic", "new Epic");
+        Epic epic1 = new Epic("Epic1", "new Epic1");
+        manager.createEpic(epic);
+        manager.createEpic(epic1);
+
+        //task.SubTask задачи для epic
+        SubTask subTaskForEpic = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
+        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
+        manager.createSubTask(subTaskForEpic);
+        manager.createSubTask(subTaskForEpic1);
+
+        //Добавляем в epic подзадачи
+        epic.addSubTask(subTaskForEpic);
+        epic.addSubTask(subTaskForEpic1);
+
+        manager.getEpicByID(0);
+
+        final ArrayList<Task> history = new ArrayList<>(historyManager.getHistory());
+
+        assertNotNull(history, "список истории не заполняется");
+        assertEquals(1, history.size(), "Неверное количество задач.");
+    }
+
+    @Test
+    void DeleteTaskForChekSizeHistoryList() {
+        TaskManager manager = Managers.getDefaultTaskManager();
+        HistoryManager historyManager = Managers.getDefaultHistoryManager();
+
+        //task.Epic задачи
+        Epic epic = new Epic("Epic", "new Epic");
+        Epic epic1 = new Epic("Epic1", "new Epic1");
+        manager.createEpic(epic);
+        manager.createEpic(epic1);
+
+        //task.SubTask задачи для epic
+        SubTask subTaskForEpic = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
+        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
+        manager.createSubTask(subTaskForEpic);
+        manager.createSubTask(subTaskForEpic1);
+
+        //Добавляем в epic подзадачи
+        epic.addSubTask(subTaskForEpic);
+        epic.addSubTask(subTaskForEpic1);
+
+        manager.getEpicByID(0);
+        manager.getEpicByID(1);
+        manager.getSubTaskByID(2);
+        manager.getSubTaskByID(3);
+
+        assertEquals(4, historyManager.getHistory().size(), "Неверное количество задач.");
+
+        manager.removeEpicByID(0);
+
+        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
+    }
+
+    @Test
+    void DeleteTaskFromhistoryManager() {
+        TaskManager manager = Managers.getDefaultTaskManager();
+        HistoryManager historyManager = Managers.getDefaultHistoryManager();
+
+        //task.Epic задачи
+        Epic epic = new Epic("Epic", "new Epic");
+        Epic epic1 = new Epic("Epic1", "new Epic1");
+        manager.createEpic(epic);
+        manager.createEpic(epic1);
+
+        manager.getEpicByID(0);
+        manager.getEpicByID(1);
+
+        assertEquals(2, historyManager.getHistory().size(), "Неверное количество задач.");
+
+        historyManager.remove(0);
+
+        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
     }
 }
