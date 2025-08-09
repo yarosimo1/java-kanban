@@ -29,18 +29,21 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(int id) {
         Node<Task> node = history.get(id);
+
         if (node != null) {
             removeNode(node);
         }
     }
 
-    public void linkLast(Task task) {
+    private void linkLast(Task task) {
         Node<Task> newNode = new Node<>(tail, task, null);
+
         if (tail != null) {
             tail.next = newNode;
         } else {
             head = newNode;
         }
+
         tail = newNode;
         history.put(task.getId(), newNode);
     }
