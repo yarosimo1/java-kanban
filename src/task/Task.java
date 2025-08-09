@@ -36,12 +36,12 @@ public class Task {
         return Objects.hash(id);
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 
-    public void setID(int ID) {
-        this.id = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTaskName() {
