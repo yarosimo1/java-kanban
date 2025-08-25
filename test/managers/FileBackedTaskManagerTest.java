@@ -24,7 +24,6 @@ class FileBackedTaskManagerTest {
         FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);
 
         assertNull(fileBackedTaskManager);
-        System.out.println("Временный файл: " + file.getAbsolutePath());
     }
 
     @Test
@@ -61,7 +60,6 @@ class FileBackedTaskManagerTest {
         assertNotNull(fileBackedTaskManager.createSubTask(subTaskForEpic));
         assertNotNull(fileBackedTaskManager.createSubTask(subTaskForEpic1));
         assertNotNull(fileBackedTaskManager.createSubTask(subTaskForEpic2));
-        System.out.println("Временный файл: " + file.getAbsolutePath());
     }
 
     @Test
