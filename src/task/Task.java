@@ -1,27 +1,34 @@
 package task;
 
+import enums.TaskStatus;
+import enums.TypeTasks;
+
 import java.util.Objects;
 
 public class Task {
-    private String taskName;
-    private String description;
     private int id;
+    private TypeTasks typeTasks;
+    private String taskName;
     private TaskStatus taskStatus;
+    private String description;
 
     public Task(String taskName, String description) {
         this.taskName = taskName;
         this.taskStatus = TaskStatus.NEW;
         this.description = description;
+        this.typeTasks = TypeTasks.TASK;
+    }
+
+    public Task(String taskName, String description, TypeTasks typeTasks) {
+        this.taskName = taskName;
+        this.taskStatus = TaskStatus.NEW;
+        this.description = description;
+        this.typeTasks = typeTasks;
     }
 
     @Override
     public String toString() {
-        return "task.Task{" +
-                "taskName='" + taskName + '\'' +
-                ", description='" + description + '\'' +
-                ", taskStatus='" + taskStatus + '\'' +
-                ", id=" + id +
-                '}';
+        return "Task{" + "id=" + id + ", typeTasks=" + typeTasks + ", taskName='" + taskName + '\'' + ", taskStatus=" + taskStatus + ", description='" + description + '\'' + '}';
     }
 
     @Override
@@ -66,5 +73,13 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public TypeTasks getTypeTasks() {
+        return typeTasks;
+    }
+
+    public void setTypeTasks() {
+        this.typeTasks = typeTasks;
     }
 }

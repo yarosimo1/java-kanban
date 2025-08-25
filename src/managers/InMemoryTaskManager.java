@@ -1,9 +1,9 @@
 package managers;
 
+import enums.TaskStatus;
 import task.Epic;
 import task.SubTask;
 import task.Task;
-import task.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,22 +75,35 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task createTask(Task task) {
-        task.setId(idTask++);
-        tasks.put(task.getId(), task);
+        if (task.getId() == 0) {
+            task.setId(++idTask);
+            tasks.put(task.getId(), task);
+        } else {
+            tasks.put(task.getId(), task);
+        }
+
         return tasks.get(task.getId());
     }
 
     @Override
     public Epic createEpic(Epic task) {
-        task.setId(idTask++);
-        epicTasks.put(task.getId(), task);
+        if (task.getId() == 0) {
+            task.setId(++idTask);
+            epicTasks.put(task.getId(), task);
+        } else {
+            epicTasks.put(task.getId(), task);
+        }
         return epicTasks.get(task.getId());
     }
 
     @Override
     public SubTask createSubTask(SubTask task) {
-        task.setId(idTask++);
-        subTasks.put(task.getId(), task);
+        if (task.getId() == 0) {
+            task.setId(++idTask);
+            subTasks.put(task.getId(), task);
+        } else {
+            subTasks.put(task.getId(), task);
+        }
 
         Epic epic = task.getEpic();
         if (epic != null) {
