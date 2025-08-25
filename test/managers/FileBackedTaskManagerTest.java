@@ -1,6 +1,5 @@
 package managers;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.SubTask;
@@ -9,13 +8,15 @@ import task.Task;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class FileBackedTaskManagerTest {
     File file = File.createTempFile("tasks", ".csv");
     FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
 
-    FileBackedTaskManagerTest() throws IOException {}
+    FileBackedTaskManagerTest() throws IOException {
+    }
 
     @Test
     void LoadTasksFromEmptyFile() throws IOException {
@@ -70,7 +71,4 @@ class FileBackedTaskManagerTest {
         assertNotNull(fileBackedTaskManager.getAllEpicTasks());
         assertNotNull(fileBackedTaskManager.getAllSubTasks());
     }
-
-
-
 }
