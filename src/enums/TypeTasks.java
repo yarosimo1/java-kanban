@@ -1,7 +1,5 @@
 package enums;
 
 public enum TypeTasks {
-    TASK,
-    EPIC,
-    SUBTASK
+    TASK, EPIC, SUBTASK
 }

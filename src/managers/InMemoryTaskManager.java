@@ -1,9 +1,9 @@
 package managers;
 
+import enums.TaskStatus;
 import task.Epic;
 import task.SubTask;
 import task.Task;
-import enums.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;

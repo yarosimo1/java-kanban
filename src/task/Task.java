@@ -28,13 +28,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "task.Task={" +
-                "id='" + id + '\'' +
-                ", typeTasks='" + typeTasks + '\'' +
-                ", taskName='" + taskName + '\'' +
-                ", taskStatus='" + taskStatus + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return "Task{" + "id=" + id + ", typeTasks=" + typeTasks + ", taskName='" + taskName + '\'' + ", taskStatus=" + taskStatus + ", description='" + description + '\'' + '}';
     }
 
     @Override
@@ -81,7 +75,11 @@ public class Task {
         this.description = description;
     }
 
-    public TypeTasks getTypeTasks() {return typeTasks;}
+    public TypeTasks getTypeTasks() {
+        return typeTasks;
+    }
 
-    public void setTypeTasks() {this.typeTasks = typeTasks;}
+    public void setTypeTasks() {
+        this.typeTasks = typeTasks;
+    }
 }
