@@ -151,6 +151,29 @@ class ManagersTest {
     }
 
     @Test
+    void DeleteTaskFromhistoryManager() {
+        TaskManager manager = Managers.getDefaultTaskManager();
+        HistoryManager historyManager = Managers.getDefaultHistoryManager();
+
+        //task.Epic задачи
+        Epic epic = new Epic("Epic", "new Epic");
+        Epic epic1 = new Epic("Epic1", "new Epic1");
+        manager.createEpic(epic);
+        manager.createEpic(epic1);
+
+        manager.getEpicByID(0);
+        manager.getEpicByID(1);
+
+        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
+
+        manager.removeEpicByID(0);
+
+        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
+
+        manager.removeEpicByID(1);
+    }
+
+    @Test
     void DeleteTaskForChekSizeHistoryList() {
         TaskManager manager = Managers.getDefaultTaskManager();
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
@@ -183,28 +206,5 @@ class ManagersTest {
         assertEquals(2, historyManager.getHistory().size(), "Неверное количество задач.");
 
         manager.removeEpicByID(epic1.getId());
-    }
-
-    @Test
-    void DeleteTaskFromhistoryManager() {
-        TaskManager manager = Managers.getDefaultTaskManager();
-        HistoryManager historyManager = Managers.getDefaultHistoryManager();
-
-        //task.Epic задачи
-        Epic epic = new Epic("Epic", "new Epic");
-        Epic epic1 = new Epic("Epic1", "new Epic1");
-        manager.createEpic(epic);
-        manager.createEpic(epic1);
-
-        manager.getEpicByID(0);
-        manager.getEpicByID(1);
-
-        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
-
-        manager.removeEpicByID(0);
-
-        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
-
-        manager.removeEpicByID(1);
     }
 }
