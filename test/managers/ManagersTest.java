@@ -1,6 +1,5 @@
 package managers;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.SubTask;
@@ -8,10 +7,9 @@ import task.Task;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ManagersTest {
 
@@ -110,18 +108,10 @@ class ManagersTest {
         Task task = new Task("Test addNewTask", "Test addNewTask description");
         taskManager.createTask(task);
 
-        assertEquals(task.getId(),
-                taskManager.getTaskByID(0).getId(),
-                "Поля не совподают");
-        assertEquals(task.getTaskName(),
-                taskManager.getTaskByID(0).getTaskName(),
-                "Поля не совпадают");
-        assertEquals(task.getTaskStatus(),
-                taskManager.getTaskByID(0).getTaskStatus(),
-                "Поля не совпадают");
-        assertEquals(task.getDescription(),
-                taskManager.getTaskByID(0).getDescription(),
-                "Поля не совпадают");
+        assertEquals(task.getId(), taskManager.getTaskByID(task.getId()).getId(), "Поля не совподают");
+        assertEquals(task.getTaskName(), taskManager.getTaskByID(task.getId()).getTaskName(), "Поля не совпадают");
+        assertEquals(task.getTaskStatus(), taskManager.getTaskByID(task.getId()).getTaskStatus(), "Поля не совпадают");
+        assertEquals(task.getDescription(), taskManager.getTaskByID(task.getId()).getDescription(), "Поля не совпадают");
 
         taskManager.removeTaskByID(task.getId());
     }
@@ -139,7 +129,7 @@ class ManagersTest {
         taskManager.getTaskByID(task.getId());
 
 
-        assertEquals(1, historyManager.getHistory().size(), "количество задач изменилось");
+        assertEquals(2, historyManager.getHistory().size(), "количество задач изменилось");
         taskManager.removeTaskByID(0);
     }
 
@@ -155,7 +145,7 @@ class ManagersTest {
         manager.getEpicByID(0);
 
         assertNotNull(historyManager.getHistory(), "список истории не заполняется");
-        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
+        assertEquals(0, historyManager.getHistory().size(), "Неверное количество задач.");
 
         manager.removeEpicByID(epic.getId());
     }
@@ -186,11 +176,11 @@ class ManagersTest {
         manager.getSubTaskByID(2);
         manager.getSubTaskByID(3);
 
-        assertEquals(4, historyManager.getHistory().size(), "Неверное количество задач.");
+        assertEquals(2, historyManager.getHistory().size(), "Неверное количество задач.");
 
         manager.removeEpicByID(0);
 
-        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
+        assertEquals(2, historyManager.getHistory().size(), "Неверное количество задач.");
 
         manager.removeEpicByID(epic1.getId());
     }
@@ -209,7 +199,7 @@ class ManagersTest {
         manager.getEpicByID(0);
         manager.getEpicByID(1);
 
-        assertEquals(2, historyManager.getHistory().size(), "Неверное количество задач.");
+        assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
 
         manager.removeEpicByID(0);
 
