@@ -37,13 +37,13 @@ public class Main {
         epic.addSubTask(subTaskForEpic2);
 
         System.out.println("----- Просмотр задач -----");
-        System.out.println(manager.getEpicByID(0));
-        System.out.println(manager.getTaskByID(5));
         System.out.println(manager.getEpicByID(1));
-        System.out.println(manager.getSubTaskByID(2));
-        System.out.println(manager.getTaskByID(6));
+        System.out.println(manager.getEpicByID(2));
         System.out.println(manager.getSubTaskByID(3));
         System.out.println(manager.getSubTaskByID(4));
+        System.out.println(manager.getSubTaskByID(5));
+        System.out.println(manager.getTaskByID(6));
+        System.out.println(manager.getTaskByID(7));
 
         System.out.println();
         System.out.println("----- История просмотров -----");
