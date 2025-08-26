@@ -1,8 +1,8 @@
 package managers;
 
-import exceptions.ManagerSaveException;
 import enums.TaskStatus;
 import enums.TypeTasks;
+import exceptions.ManagerSaveException;
 import task.Epic;
 import task.SubTask;
 import task.Task;
@@ -48,7 +48,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return manager;
     }
 
-    private static void giveTaskTypeFromFile(FileBackedTaskManager manager,Task task) {
+    private static void giveTaskTypeFromFile(FileBackedTaskManager manager, Task task) {
         TypeTasks typeTasks = task.getTypeTasks();
 
         switch (typeTasks) {

@@ -1,7 +1,6 @@
 package managers;
 
 import java.io.File;
-import java.io.IOException;
 
 public abstract class Managers {
     private static final HistoryManager HISTORY_MANAGER = new InMemoryHistoryManager();
