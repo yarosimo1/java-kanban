@@ -11,15 +11,17 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class FileBackedTaskManagerTest {
-    File file = File.createTempFile("tasks", ".csv");
-    TaskManager fileBackedTaskManager = Managers.getDefaultTaskManager(file);
+public class FileBackedTaskManagerTest {
+    File file;
+    TaskManager fileBackedTaskManager;
 
-    FileBackedTaskManagerTest() throws IOException {
+   public FileBackedTaskManagerTest() throws IOException {
+        this.file = File.createTempFile("tasks", ".csv");
+        fileBackedTaskManager = Managers.getDefaultTaskManager(file);
     }
 
     @Test
-    void LoadTasksFromEmptyFile() throws IOException {
+    public void LoadTasksFromEmptyFile() throws IOException {
         File file = File.createTempFile("tasks", ".csv");
         FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);
 
@@ -27,7 +29,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void SaveAndloadTasksFromFile() throws IOException {
+    public void SaveAndloadTasksFromFile() throws IOException {
         Task task = new Task("Task", "new Task");
         Task task1 = new Task("Task1", "new Task1");
 
@@ -63,7 +65,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void loadTasksFromFile() {
+    public void loadTasksFromFile() {
         assertNotNull(fileBackedTaskManager);
         assertNotNull(fileBackedTaskManager.getAllTasks());
         assertNotNull(fileBackedTaskManager.getAllEpicTasks());
