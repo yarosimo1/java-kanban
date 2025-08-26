@@ -28,12 +28,19 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" + "id=" + id + ", typeTasks=" + typeTasks + ", taskName='" + taskName + '\'' + ", taskStatus=" + taskStatus + ", description='" + description + '\'' + '}';
+        return "Task{" +
+                "id=" + id +
+                ", typeTasks=" + typeTasks +
+                ", taskName='" + taskName + '\'' +
+                ", taskStatus=" + taskStatus +
+                ", description='" + description + '\'' +
+                '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
+
         Task task = (Task) o;
         return id == task.id;
     }

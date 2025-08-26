@@ -77,7 +77,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             tasks.add(current.data);
             current = current.next;
         }
-
         return tasks;
     }
 }

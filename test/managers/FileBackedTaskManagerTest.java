@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class FileBackedTaskManagerTest {
     File file = File.createTempFile("tasks", ".csv");
-    FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
+    TaskManager fileBackedTaskManager = Managers.getDefaultTaskManager(file);
 
     FileBackedTaskManagerTest() throws IOException {
     }
