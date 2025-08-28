@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FileBackedTaskManagerTest {
-    File file;
-    TaskManager fileBackedTaskManager;
+    private File file;
+    private TaskManager fileBackedTaskManager;
 
    public FileBackedTaskManagerTest() throws IOException {
         this.file = File.createTempFile("tasks", ".csv");
