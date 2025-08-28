@@ -1,5 +1,8 @@
 package managers;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.SubTask;
@@ -14,23 +17,50 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ManagersTest {
-    private File file;
-    private TaskManager taskManager;
-    private HistoryManager historyManager;
+    private static File file;
+    private static TaskManager taskManager;
+    private static HistoryManager historyManager;
 
-    public ManagersTest() throws IOException {
-        this.file = File.createTempFile("tasks", ".csv");
-        this.taskManager = Managers.getDefaultTaskManager(file);
-        this.historyManager = Managers.getDefaultHistoryManager();
+    private Task task;
+    private Epic epic;
+    private Epic epic1;
+    private SubTask subTaskForEpic;
+    private  SubTask subTaskForEpic1;
 
+    @BeforeAll
+    public static void satrterCreate() throws IOException {
+        file = File.createTempFile("tasks", ".csv");
+        taskManager = Managers.getDefaultTaskManager(file);
+        historyManager = Managers.getDefaultHistoryManager();
+    }
+
+    @BeforeEach
+    public void create() {
+        task = new Task("Test addNewTask", "Test addNewTask description");
+        epic = new Epic("Epic", "new Epic");
+        epic1 = new Epic("Epic1", "new Epic1");
+        subTaskForEpic = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
+        subTaskForEpic1 = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
+        taskManager.createTask(task);
+        taskManager.createEpic(epic);
+        taskManager.createEpic(epic1);
+        taskManager.createSubTask(subTaskForEpic);
+        taskManager.createSubTask(subTaskForEpic1);
+    }
+
+
+    @AfterEach
+    public void clearLists() {
+        taskManager.removeTaskByID(task.getId());
+        taskManager.removeEpicByID(epic.getId());
+        taskManager.removeEpicByID(epic1.getId());
+        taskManager.removeSubTaskByID(subTaskForEpic.getId());
+        taskManager.removeSubTaskByID(subTaskForEpic1.getId());
     }
 
     @Test
     public void createTask() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
-        final int taskId = taskManager.createTask(task).getId();
-
-        final Task savedTask = taskManager.getTaskByID(taskId);
+        final Task savedTask = taskManager.getTaskByID(task.getId());
 
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");
@@ -40,61 +70,52 @@ public class ManagersTest {
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
-        taskManager.removeTaskByID(taskId);
+        taskManager.removeTaskByID(task.getId());
+        taskManager.removeSubTaskByID(savedTask.getId());
     }
 
     @Test
     public void createEpic() {
-        Epic task = new Epic("Test addNewTask", "Test addNewTask description");
-        final int taskId = taskManager.createTask(task).getId();
-
-        final Task savedTask = taskManager.getTaskByID(taskId);
+        final Epic savedTask = taskManager.getEpicByID(epic.getId());
 
         assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(task, savedTask, "Задачи не совпадают.");
+        assertEquals(epic, savedTask, "Задачи не совпадают.");
 
         final ArrayList<Task> tasks = taskManager.getAllTasks();
 
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
-        taskManager.removeEpicByID(taskId);
+        taskManager.removeEpicByID(epic.getId());
+        taskManager.removeEpicByID(savedTask.getId());
     }
 
     @Test
     public void createSubTask() {
-        SubTask task = new SubTask("Test addNewTask", "Test addNewTask description");
-        final int taskId = taskManager.createTask(task).getId();
-
-        final Task savedTask = taskManager.getTaskByID(taskId);
+        final SubTask savedTask = taskManager.getSubTaskByID(subTaskForEpic.getId());
 
         assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(task, savedTask, "Задачи не совпадают.");
+        assertEquals(subTaskForEpic, savedTask, "Задачи не совпадают.");
 
         final ArrayList<Task> tasks = taskManager.getAllTasks();
 
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
-        taskManager.removeSubTaskByID(taskId);
+        taskManager.removeSubTaskByID(savedTask.getId());
     }
 
     @Test
     void managersReturnReadyForWorkManagers() {
-
         assertNotNull(taskManager, "Менеджер задач не возвращается.");
         assertNotNull(historyManager, "Менеджер истории просмотров не возвращается.");
     }
 
     @Test
     public void InMemoryTaskManagerCanFindTasksByID() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
-        Epic epicTask = new Epic("Test addNewTask", "Test addNewTask description");
-        SubTask subTask = new SubTask("Test addNewTask", "Test addNewTask description");
-
-        final int taskID = taskManager.createTask(task).getId();
-        final int epicTaskID = taskManager.createTask(epicTask).getId();
-        final int subTaskID = taskManager.createSubTask(subTask).getId();
+        final int taskID = task.getId();
+        final int epicTaskID = epic.getId();
+        final int subTaskID = subTaskForEpic.getId();
 
         LinkedList<Task> tasks = new LinkedList<>();
         tasks.add(taskManager.getTaskByID(taskID));
@@ -110,9 +131,6 @@ public class ManagersTest {
 
     @Test
     public void cehkingEachTaskField() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
-        taskManager.createTask(task);
-
         assertEquals(task.getId(), taskManager.getTaskByID(task.getId()).getId(), "Поля не совподают");
         assertEquals(task.getTaskName(), taskManager.getTaskByID(task.getId()).getTaskName(), "Поля не совпадают");
         assertEquals(task.getTaskStatus(), taskManager.getTaskByID(task.getId()).getTaskStatus(), "Поля не совпадают");
@@ -123,26 +141,19 @@ public class ManagersTest {
 
     @Test
     void cehkingTaskBeforeUpdating() {
-
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
         taskManager.getTaskByID(task.getId());
 
-        task = new Task("Task after update", "Test addUpdateTask description");
+        task.setDescription("new Description");
+
         taskManager.updateTask(task);
         taskManager.getTaskByID(task.getId());
 
-
         assertEquals(1, historyManager.getHistory().size(), "количество задач изменилось");
-        taskManager.removeTaskByID(0);
+        taskManager.removeTaskByID(task.getId());
     }
 
     @Test
     public void chekListHistoryField() {
-
-        //task.Epic задачи
-        Epic epic = new Epic("Epic", "new Epic");
-        taskManager.createEpic(epic);
-
         taskManager.getEpicByID(epic.getId());
 
         assertNotNull(historyManager.getHistory(), "список истории не заполняется");
@@ -153,49 +164,31 @@ public class ManagersTest {
 
     @Test
     public void DeleteTaskFromhistoryManager() {
-
-        //task.Epic задачи
-        Epic epic = new Epic("Epic", "new Epic");
-        Epic epic1 = new Epic("Epic1", "new Epic1");
-
-        taskManager.getEpicByID(taskManager.createEpic(epic).getId());
-        taskManager.getEpicByID(taskManager.createEpic(epic1).getId());
+        taskManager.getEpicByID(epic.getId());
+        taskManager.getEpicByID(epic1.getId());
 
         assertEquals(2, historyManager.getHistory().size(), "Неверное количество задач.");
-
         taskManager.removeEpicByID(epic.getId());
 
         assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
-
         taskManager.removeEpicByID(epic1.getId());
     }
 
     @Test
     public void DeleteTaskForChekSizeHistoryList() {
-
-        //task.Epic задачи
-        Epic epic = new Epic("Epic", "new Epic");
-        Epic epic1 = new Epic("Epic1", "new Epic1");
-
-        //task.SubTask задачи для epic
-        SubTask subTaskForEpic = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
-        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic", "new SubTaskForEpic");
-
         //Добавляем в epic подзадачи
         epic.addSubTask(subTaskForEpic);
         epic.addSubTask(subTaskForEpic1);
 
-        taskManager.getEpicByID(taskManager.createEpic(epic).getId());
-        taskManager.getEpicByID(taskManager.createEpic(epic1).getId());
-        taskManager.getSubTaskByID(taskManager.createSubTask(subTaskForEpic).getId());
-        taskManager.getSubTaskByID(taskManager.createSubTask(subTaskForEpic1).getId());
+        taskManager.getEpicByID(epic.getId());
+        taskManager.getEpicByID(epic1.getId());
+        taskManager.getSubTaskByID(subTaskForEpic.getId());
+        taskManager.getSubTaskByID(subTaskForEpic1.getId());
 
         assertEquals(4, historyManager.getHistory().size(), "Неверное количество задач.");
-
         taskManager.removeEpicByID(epic.getId());
 
         assertEquals(1, historyManager.getHistory().size(), "Неверное количество задач.");
-
         taskManager.removeEpicByID(epic1.getId());
     }
 }
