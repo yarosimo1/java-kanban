@@ -1,5 +1,7 @@
 package managers;
 
+import java.io.File;
+
 public abstract class Managers {
     private static final HistoryManager HISTORY_MANAGER = new InMemoryHistoryManager();
 
@@ -7,8 +9,8 @@ public abstract class Managers {
         return HISTORY_MANAGER;
     }
 
-    public static TaskManager getDefaultTaskManager() {
-        return new InMemoryTaskManager();
+    public static TaskManager getDefaultTaskManager(File file) {
+        return new FileBackedTaskManager(file);
     }
 
 }
