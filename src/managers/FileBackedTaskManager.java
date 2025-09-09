@@ -120,60 +120,46 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static void main(String[] args) {
-//        File file1 = new File("task.csv");
-//        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file1);
-//
-//        Task task = new Task("Task", "new Task",
-//                LocalDateTime.of(2025, 9, 8, 10, 15));
-//        Task task1 = new Task("Task1", "new Task1",
-//                LocalDateTime.of(2025, 9, 8, 10, 15));
-//
-//        Epic epic = new Epic("Epic", "new Epic");
-//        Epic epic1 = new Epic("Epic1", "new Epic1");
-//
-//        SubTask subTaskForEpic = new SubTask("SubTaskForEpic1", "new SubTaskForEpic1",
-//                LocalDateTime.of(2025, 9, 8, 10, 45));
-//        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic2", "new SubTaskForEpic2",
-//                LocalDateTime.of(2025, 9, 8, 11, 00));
-//        SubTask subTaskForEpic2 = new SubTask("SubTaskForEpic3", "new SubTaskForEpic3",
-//                LocalDateTime.of(2025, 9, 8, 11, 15));
-//
-//        subTaskForEpic.setEpic(epic);
-//        subTaskForEpic1.setEpic(epic);
-//        subTaskForEpic2.setEpic(epic1);
-//
-//        fileBackedTaskManager.createTask(task);
-//        fileBackedTaskManager.createTask(task1);
-//        fileBackedTaskManager.createEpic(epic);
-//        fileBackedTaskManager.createEpic(epic1);
-//        fileBackedTaskManager.createSubTask(subTaskForEpic);
-//        fileBackedTaskManager.createSubTask(subTaskForEpic1);
-//        fileBackedTaskManager.createSubTask(subTaskForEpic2);
-//
-//        System.out.println(epic.getSubTasks());
-//
-////        fileBackedTaskManager = loadFromFile(file1);
-////        FileBackedTaskManager fileBackedTaskManager1 = loadFromFile(file1);
-//
-//        System.out.println("Вывод из 'fileBackedTaskManager'");
-//        System.out.println(fileBackedTaskManager.getAllTasks());
-//        System.out.println();
-//        System.out.println(fileBackedTaskManager.getAllEpicTasks());
-//        System.out.println();
-//        System.out.println(fileBackedTaskManager.getAllSubTasks());
-//        System.out.println("-----------");
-//        System.out.println();
+        File file1 = new File("task.csv");
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file1);
 
-//        System.out.println("Вывод из 'fileBackedTaskManager1'");
-//        System.out.println(fileBackedTaskManager1.getAllTasks());
-//        System.out.println();
-//        System.out.println(fileBackedTaskManager1.getAllEpicTasks());
-//        System.out.println();
-//        System.out.println(fileBackedTaskManager1.getAllSubTasks());
-//        System.out.println("-----------");
-//        System.out.println();
-//
-//        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
+        Task task = new Task("Task", "new Task",
+                LocalDateTime.of(2025, 9, 8, 10, 15), Duration.ofMinutes(15));
+        Task task1 = new Task("Task1", "new Task1",
+                LocalDateTime.of(2025, 9, 8, 10, 30), Duration.ofMinutes(15));
+
+        Epic epic = new Epic("Epic", "new Epic");
+        Epic epic1 = new Epic("Epic1", "new Epic1");
+
+        SubTask subTaskForEpic = new SubTask("SubTaskForEpic1", "new SubTaskForEpic1",
+                LocalDateTime.of(2025, 9, 8, 10, 45), Duration.ofMinutes(15));
+        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic2", "new SubTaskForEpic2",
+                LocalDateTime.of(2025, 9, 8, 11, 00), Duration.ofMinutes(15));
+        SubTask subTaskForEpic2 = new SubTask("SubTaskForEpic3", "new SubTaskForEpic3",
+                LocalDateTime.of(2025, 9, 8, 11, 15), Duration.ofMinutes(15));
+
+        subTaskForEpic.setEpic(epic);
+        subTaskForEpic1.setEpic(epic);
+        subTaskForEpic2.setEpic(epic1);
+
+        fileBackedTaskManager.createTask(task);
+        fileBackedTaskManager.createTask(task1);
+        fileBackedTaskManager.createEpic(epic);
+        fileBackedTaskManager.createEpic(epic1);
+        fileBackedTaskManager.createSubTask(subTaskForEpic);
+        fileBackedTaskManager.createSubTask(subTaskForEpic1);
+        fileBackedTaskManager.createSubTask(subTaskForEpic2);
+
+        System.out.println("Вывод из 'fileBackedTaskManager'");
+        System.out.println(fileBackedTaskManager.getAllTasks());
+        System.out.println();
+        System.out.println(fileBackedTaskManager.getAllEpicTasks());
+        System.out.println();
+        System.out.println(fileBackedTaskManager.getAllSubTasks());
+        System.out.println("-----------");
+        System.out.println();
+
+        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
     }
 
     private void initFile() {
