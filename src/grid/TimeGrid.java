@@ -1,4 +1,4 @@
-package timeGrid;
+package grid;
 
 import task.Task;
 
