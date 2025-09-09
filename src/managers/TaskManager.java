@@ -37,9 +37,9 @@ public interface TaskManager {
 
     SubTask updateSubTask(SubTask task);
 
-    void removeTaskByID(int idTask);
+    Task removeTaskByID(int idTask);
 
-    void removeEpicByID(int idTask);
+    Epic removeEpicByID(int idTask);
 
-    void removeSubTaskByID(int idTask);
+    SubTask removeSubTaskByID(int idTask);
 }

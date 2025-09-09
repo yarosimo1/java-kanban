@@ -3,7 +3,10 @@ package task;
 import enums.TaskStatus;
 import enums.TypeTasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Task {
     private int id;
@@ -11,19 +14,25 @@ public class Task {
     private String taskName;
     private TaskStatus taskStatus;
     private String description;
+    private Duration duration;
+    private Optional<LocalDateTime> startTime;
 
-    public Task(String taskName, String description) {
+    public Task(String taskName, String description, LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.taskStatus = TaskStatus.NEW;
         this.description = description;
         this.typeTasks = TypeTasks.TASK;
+        this.startTime = Optional.ofNullable(startTime);
+        this.duration = duration;
     }
 
-    public Task(String taskName, String description, TypeTasks typeTasks) {
+    public Task(String taskName, String description, TypeTasks typeTasks, LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.taskStatus = TaskStatus.NEW;
         this.description = description;
         this.typeTasks = typeTasks;
+        this.startTime = Optional.ofNullable(startTime);
+        this.duration = duration;
     }
 
     @Override
@@ -71,7 +80,20 @@ public class Task {
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
+        if (this.taskStatus == taskStatus) return;
+
         this.taskStatus = taskStatus;
+
+        switch (taskStatus) {
+            case IN_PROGRESS -> startTime = Optional.of(startTime.orElse(LocalDateTime.now()));
+            case DONE -> {
+                if (startTime.isPresent()) {
+                    duration = Duration.between(startTime.get(), LocalDateTime.now());
+                } else {
+                    duration = Duration.ZERO;
+                }
+            }
+        }
     }
 
     public String getDescription() {
@@ -88,5 +110,30 @@ public class Task {
 
     public void setTypeTasks() {
         this.typeTasks = typeTasks;
+    }
+
+    public LocalDateTime getEndTime() throws NullPointerException {
+        LocalDateTime newDateTime = getStartTime();
+        if (newDateTime != null && duration != null) {
+            return newDateTime.plus(duration);
+        }
+
+        return null;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime()  {
+        return startTime.orElse(null);
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = Optional.ofNullable(startTime);
     }
 }

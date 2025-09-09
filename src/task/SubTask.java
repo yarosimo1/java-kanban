@@ -2,12 +2,15 @@ package task;
 
 import enums.TypeTasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class SubTask extends Task {
     private Epic epic;
     private int epicId;
 
-    public SubTask(String taskName, String description) {
-        super(taskName, description, TypeTasks.SUBTASK);
+    public SubTask(String taskName, String description, LocalDateTime startTime, Duration duration) {
+        super(taskName, description, TypeTasks.SUBTASK, startTime, duration);
     }
 
     public Epic getEpic() {
@@ -26,4 +29,3 @@ public class SubTask extends Task {
         this.epicId = epicId;
     }
 }
-
