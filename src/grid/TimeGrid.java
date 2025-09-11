@@ -18,9 +18,11 @@ public class TimeGrid {
 
     public boolean canSchedule(Task task) {
         isDone = task.getTaskStatus() == TaskStatus.DONE;
+
         if (isDone) {
             return true;
         }
+
         LocalDateTime start = task.getStartTime();
         LocalDateTime end = task.getEndTime();
 
@@ -32,6 +34,7 @@ public class TimeGrid {
             if (slots.getOrDefault(cursor, false)) {
                 return false;
             }
+            
             cursor = cursor.plusMinutes(15);
         }
         return true;
