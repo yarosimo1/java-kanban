@@ -19,7 +19,9 @@ public class TimeGrid {
     public boolean canSchedule(Task task) {
         isDone = task.getTaskStatus() == TaskStatus.DONE;
 
-        if (isDone) {return true;}
+        if (isDone) {
+            return true;
+        }
 
         LocalDateTime start = task.getStartTime();
         LocalDateTime end = task.getEndTime();
@@ -39,7 +41,9 @@ public class TimeGrid {
     }
 
     public void schedule(Task task) {
-        if (isDone) {return;}
+        if (isDone) {
+            return;
+        }
 
         LocalDateTime start = task.getStartTime();
         LocalDateTime end = task.getEndTime();
