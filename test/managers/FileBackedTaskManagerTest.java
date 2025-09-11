@@ -26,7 +26,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    void shouldReturnNullWhenLoadingFromEmptyFile() throws IOException {
+    public void shouldReturnNullWhenLoadingFromEmptyFile() throws IOException {
         File emptyFile = File.createTempFile("tasks", ".csv");
 
         FileBackedTaskManager loaded = FileBackedTaskManager.loadFromFile(emptyFile);
@@ -35,7 +35,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    void shouldSaveAndLoadTasksFromFile() throws IOException {
+    public void shouldSaveAndLoadTasksFromFile() throws IOException {
         FileBackedTaskManager manager = createTaskManager();
 
         Task task = new Task("Task", "new Task",
@@ -75,7 +75,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    void shouldLoadEmptyCollectionsFromFile() {
+    public void shouldLoadEmptyCollectionsFromFile() {
         FileBackedTaskManager manager = createTaskManager();
 
         assertNotNull(manager.getAllTasks(), "Список задач не должен быть null");

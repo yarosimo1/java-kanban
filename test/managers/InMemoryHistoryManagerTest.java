@@ -14,18 +14,18 @@ class InMemoryHistoryManagerTest {
     private HistoryManager historyManager;
 
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
         historyManager = new InMemoryHistoryManager();
     }
 
     @Test
-    void historyShouldBeEmptyInitially() {
+    public void historyShouldBeEmptyInitially() {
         assertTrue(historyManager.getHistory().isEmpty(),
                 "История должна быть пустой при создании");
     }
 
     @Test
-    void shouldAddTaskToHistory() {
+    public void shouldAddTaskToHistory() {
         Task task = new Task("Task", "Description",
                 LocalDateTime.now(), Duration.ofMinutes(15));
         task.setId(1);
@@ -38,7 +38,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldNotAddNullTask() {
+    public void shouldNotAddNullTask() {
         historyManager.add(null);
 
         assertTrue(historyManager.getHistory().isEmpty(),
@@ -46,7 +46,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldRemoveDuplicatesWhenAddingTaskAgain() {
+    public void shouldRemoveDuplicatesWhenAddingTaskAgain() {
         Task task = new Task("Task", "Description",
                 LocalDateTime.now(), Duration.ofMinutes(15));
         task.setId(1);
@@ -59,7 +59,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldRemoveTaskFromBeginning() {
+    public void shouldRemoveTaskFromBeginning() {
         Task task1 = new Task("Task1", "Desc1",
                 LocalDateTime.now(), Duration.ofMinutes(15));
         task1.setId(1);
@@ -78,7 +78,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldRemoveTaskFromMiddle() {
+    public void shouldRemoveTaskFromMiddle() {
         Task task1 = new Task("Task1", "Desc1",
                 LocalDateTime.now().plusMinutes(15), Duration.ofMinutes(15));
         task1.setId(1);
@@ -101,7 +101,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldRemoveTaskFromEnd() {
+    public void shouldRemoveTaskFromEnd() {
         Task task1 = new Task("Task1", "Desc1",
                 LocalDateTime.now(), Duration.ofMinutes(15));
         task1.setId(1);

@@ -1,12 +1,9 @@
 package managers;
 
-import enums.TaskStatus;
 import task.Epic;
 import task.SubTask;
 import task.Task;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,7 +19,6 @@ public class InMemoryTaskManager implements TaskManager {
     );
     private int idTask = 0;
 
-    // Очистка
     @Override
     public void clearTasks() {
         tasks.clear();
@@ -30,6 +26,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearEpicTasks() {
+        epicTasks.values().stream().forEach(epic -> {
+            epic.getSubTasks().forEach(sub -> {
+                subTasks.remove(sub.getId());
+            });
+
+            epic.clearSubTasks();
+        });
+
         epicTasks.clear();
     }
 
@@ -40,13 +44,12 @@ public class InMemoryTaskManager implements TaskManager {
                 .filter(Objects::nonNull)
                 .forEach(epic -> {
                     epic.clearSubTasks();
-                    updateEpicStatus(epic);
-                    updateEpicTime(epic);
+                    epic.updateEpicStatus();
+                    epic.updateEpicTime();
                 });
         subTasks.clear();
     }
 
-    // Получение списков
     @Override
     public ArrayList<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
@@ -62,7 +65,6 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(subTasks.values());
     }
 
-    // Получение по ID
     @Override
     public Task getTaskByID(int idTask) {
         historyManager.add(tasks.get(idTask));
@@ -81,7 +83,6 @@ public class InMemoryTaskManager implements TaskManager {
         return subTasks.get(idTask);
     }
 
-    // Создание
     @Override
     public Task createTask(Task task) {
         task.setId(++idTask);
@@ -106,15 +107,14 @@ public class InMemoryTaskManager implements TaskManager {
         Optional.ofNullable(task.getEpic())
                 .ifPresent(epic -> {
                     epic.addSubTask(task);
-                    updateEpicStatus(epic);
-                    updateEpicTime(epic);
+                    epic.updateEpicStatus();
+                    epic.updateEpicTime();
                 });
 
         addToPrioritized(task);
         return task;
     }
 
-    // Обновление
     @Override
     public Task updateTask(Task task) {
         removeFromPrioritized(task);
@@ -139,14 +139,13 @@ public class InMemoryTaskManager implements TaskManager {
 
         Optional.ofNullable(task.getEpic())
                 .ifPresent(epic -> {
-                    updateEpicStatus(epic);
-                    updateEpicTime(epic);
+                    epic.updateEpicStatus();
+                    epic.updateEpicTime();
                 });
 
         return task;
     }
 
-    // Удаление
     @Override
     public Task removeTaskByID(int idTask) {
         Task task = tasks.remove(idTask);
@@ -179,8 +178,8 @@ public class InMemoryTaskManager implements TaskManager {
             Optional.ofNullable(sub.getEpic())
                     .ifPresent(epic -> {
                         epic.removeSubTask(sub);
-                        updateEpicStatus(epic);
-                        updateEpicTime(epic);
+                        epic.updateEpicStatus();
+                        epic.updateEpicTime();
                     });
             removeFromPrioritized(sub);
         }
@@ -188,80 +187,23 @@ public class InMemoryTaskManager implements TaskManager {
         return sub;
     }
 
-    // Вспомогательные методы
     public List<SubTask> getEpicSubTasksByID(Epic task) {
         return Optional.ofNullable(epicTasks.get(task.getId()))
                 .map(Epic::getSubTasks)
                 .orElse(Collections.emptyList());
     }
 
-    private void updateEpicStatus(Epic epic) {
-        if (epic == null) return;
-
-        List<SubTask> subs = epic.getSubTasks();
-
-        if (subs.isEmpty()) {
-            epic.setTaskStatus(TaskStatus.NEW);
-            return;
-        }
-
-        boolean allNew = subs.stream()
-                .allMatch(sub -> sub.getTaskStatus() == TaskStatus.NEW);
-        boolean allDone = subs.stream()
-                .allMatch(sub -> sub.getTaskStatus() == TaskStatus.DONE);
-
-        if (allDone) {
-            epic.setTaskStatus(TaskStatus.DONE);
-        } else if (allNew) {
-            epic.setTaskStatus(TaskStatus.NEW);
-        } else {
-            epic.setTaskStatus(TaskStatus.IN_PROGRESS);
-        }
-    }
-
-    private void updateEpicTime(Epic epic) {
-        if (epic == null) return;
-
-        List<SubTask> subs = epic.getSubTasks();
-
-        if (subs.isEmpty()) {
-            epic.setDuration(Duration.ZERO);
-            epic.setStartTime(null);
-            epic.setEndTime(null);
-            return;
-        }
-
-        Duration totalDuration = subs.stream()
-                .map(SubTask::getDuration)
-                .filter(Objects::nonNull)
-                .reduce(Duration.ZERO, Duration::plus);
-
-        LocalDateTime minStart = subs.stream()
-                .map(SubTask::getStartTime)
-                .filter(Objects::nonNull)
-                .min(LocalDateTime::compareTo)
-                .orElse(null);
-
-        LocalDateTime maxEnd = subs.stream()
-                .map(SubTask::getEndTime)
-                .filter(Objects::nonNull)
-                .max(LocalDateTime::compareTo)
-                .orElse(null);
-
-        epic.setDuration(totalDuration);
-        epic.setStartTime(minStart);
-        epic.setEndTime(maxEnd);
-    }
-
-    // Приоритет
-    private void addToPrioritized(Task task) {
+    @Override
+    public void addToPrioritized(Task task) {
         Optional.ofNullable(task.getStartTime()).ifPresent(t -> prioritizedTasks.add(task));
     }
 
-    private void removeFromPrioritized(Task task) {
+    @Override
+    public void removeFromPrioritized(Task task) {
         Optional.ofNullable(task.getStartTime()).ifPresent(t -> prioritizedTasks.remove(task));
     }
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         return prioritizedTasks.stream().collect(Collectors.toList());
     }

@@ -6,7 +6,6 @@ import enums.TypeTasks;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 public class Task {
     private int id;
@@ -15,14 +14,14 @@ public class Task {
     private TaskStatus taskStatus;
     private String description;
     private Duration duration;
-    private Optional<LocalDateTime> startTime;
+    private LocalDateTime startTime;
 
     public Task(String taskName, String description, LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.taskStatus = TaskStatus.NEW;
         this.description = description;
         this.typeTasks = TypeTasks.TASK;
-        this.startTime = Optional.ofNullable(startTime);
+        this.startTime = startTime;
         this.duration = duration;
     }
 
@@ -31,7 +30,7 @@ public class Task {
         this.taskStatus = TaskStatus.NEW;
         this.description = description;
         this.typeTasks = typeTasks;
-        this.startTime = Optional.ofNullable(startTime);
+        this.startTime = startTime;
         this.duration = duration;
     }
 
@@ -85,10 +84,12 @@ public class Task {
         this.taskStatus = taskStatus;
 
         switch (taskStatus) {
-            case IN_PROGRESS -> startTime = Optional.of(startTime.orElse(LocalDateTime.now()));
+            case IN_PROGRESS -> {
+                startTime = Objects.requireNonNullElseGet(startTime, LocalDateTime::now);
+            }
             case DONE -> {
-                if (startTime.isPresent()) {
-                    duration = Duration.between(startTime.get(), LocalDateTime.now());
+                if (startTime != null) {
+                    duration = Duration.between(startTime, LocalDateTime.now());
                 } else {
                     duration = Duration.ZERO;
                 }
@@ -130,10 +131,10 @@ public class Task {
     }
 
     public LocalDateTime getStartTime()  {
-        return startTime.orElse(null);
+        return startTime;
     }
 
     public void setStartTime(LocalDateTime startTime) {
-        this.startTime = Optional.ofNullable(startTime);
+        this.startTime = startTime;
     }
 }

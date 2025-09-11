@@ -1,5 +1,6 @@
 package grid;
 
+import enums.TaskStatus;
 import task.Task;
 
 import java.time.LocalDateTime;
@@ -9,12 +10,17 @@ import java.util.Map;
 public class TimeGrid {
     private final Map<LocalDateTime, Boolean> slots = new HashMap<>();
     private final LocalDateTime startOfYear;
+    private boolean isDone = false;
 
     public TimeGrid(LocalDateTime startOfYear) {
         this.startOfYear = startOfYear;
     }
 
     public boolean canSchedule(Task task) {
+        isDone = task.getTaskStatus() == TaskStatus.DONE;
+        if (isDone) {
+            return true;
+        }
         LocalDateTime start = task.getStartTime();
         LocalDateTime end = task.getEndTime();
 
@@ -32,6 +38,8 @@ public class TimeGrid {
     }
 
     public void schedule(Task task) {
+        if (isDone) {return;}
+
         LocalDateTime start = task.getStartTime();
         LocalDateTime end = task.getEndTime();
 

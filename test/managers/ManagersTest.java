@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ManagersTest {
     @Test
-    void shouldReturnDefaultTaskManager() throws IOException {
+    public void shouldReturnDefaultTaskManager() throws IOException {
         File file = File.createTempFile("tasks", ".csv");
         TaskManager manager = Managers.getDefaultTaskManager(file);
 
@@ -17,7 +17,7 @@ public class ManagersTest {
     }
 
     @Test
-    void shouldReturnDefaultHistoryManager() {
+    public void shouldReturnDefaultHistoryManager() {
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
 
         assertNotNull(historyManager, "Менеджер истории не должен быть null");

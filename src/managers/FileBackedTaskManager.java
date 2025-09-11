@@ -12,6 +12,7 @@ import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private File file;
@@ -58,10 +59,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         switch (typeTasks) {
             case EPIC -> manager.createEpic((Epic) task);
             case SUBTASK -> {
-                SubTask subTask = manager.createSubTask((SubTask) task);
+                SubTask subTask = (SubTask) task;
                 Epic epic = manager.getEpicByID(subTask.getEpicId());
-                epic.addSubTask(subTask);
-                manager.updateEpic(epic);
+                subTask.setEpic(epic);
+                manager.createSubTask(subTask);
             }
             case TASK -> manager.createTask(task);
             default -> throw new IllegalArgumentException("Неизвестный тип задачи: " + typeTasks);
@@ -97,6 +98,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epic.setId(id);
                 epic.setTaskStatus(taskStatus);
                 epic.setDuration(duration);
+                epic.setStartTime(startTime);
                 return epic;
             }
             case TASK -> {
@@ -150,14 +152,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         fileBackedTaskManager.createSubTask(subTaskForEpic1);
         fileBackedTaskManager.createSubTask(subTaskForEpic2);
 
-        System.out.println("Вывод из 'fileBackedTaskManager'");
-        System.out.println(fileBackedTaskManager.getAllTasks());
-        System.out.println();
-        System.out.println(fileBackedTaskManager.getAllEpicTasks());
-        System.out.println();
-        System.out.println(fileBackedTaskManager.getAllSubTasks());
-        System.out.println("-----------");
-        System.out.println();
+        fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file1);
 
         System.out.println(fileBackedTaskManager.getPrioritizedTasks());
     }
@@ -221,6 +216,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public ArrayList<SubTask> getAllSubTasks() {
         return super.getAllSubTasks();
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return super.getPrioritizedTasks();
     }
 
     @Override

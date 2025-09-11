@@ -5,8 +5,11 @@ import task.SubTask;
 import task.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
+    void addToPrioritized(Task task);
+
     void clearTasks();
 
     void clearEpicTasks();
@@ -18,6 +21,8 @@ public interface TaskManager {
     ArrayList<Epic> getAllEpicTasks();
 
     ArrayList<SubTask> getAllSubTasks();
+
+    List<Task> getPrioritizedTasks();
 
     Task getTaskByID(int idTask);
 
@@ -42,4 +47,7 @@ public interface TaskManager {
     Epic removeEpicByID(int idTask);
 
     SubTask removeSubTaskByID(int idTask);
+
+    void removeFromPrioritized(Task task);
+
 }

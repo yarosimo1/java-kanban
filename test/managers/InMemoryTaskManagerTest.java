@@ -18,7 +18,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
     }
 
     @Test
-    void shouldLinkSubTaskWithEpic() {
+    public void shouldLinkSubTaskWithEpic() {
         InMemoryTaskManager manager = createTaskManager();
 
         Epic epic = new Epic("Epic", "Epic description");
@@ -36,7 +36,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
     }
 
     @Test
-    void shouldUpdateTaskCorrectly() {
+    public void shouldUpdateTaskCorrectly() {
         InMemoryTaskManager manager = createTaskManager();
 
         Task task = new Task("Task", "Description",
