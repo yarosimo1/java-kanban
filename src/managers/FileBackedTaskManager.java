@@ -6,13 +6,18 @@ import exceptions.ManagerSaveException;
 import task.Epic;
 import task.SubTask;
 import task.Task;
+import grid.TimeGrid;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private File file;
     private boolean isLoading = false;
+    private final TimeGrid timeGrid = new TimeGrid(LocalDateTime.now().withDayOfYear(1).withHour(0).withMinute(0));
 
     public FileBackedTaskManager(File file) {
         this.file = file;
@@ -54,10 +59,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         switch (typeTasks) {
             case EPIC -> manager.createEpic((Epic) task);
             case SUBTASK -> {
-                SubTask subTask = manager.createSubTask((SubTask) task);
+                SubTask subTask = (SubTask) task;
                 Epic epic = manager.getEpicByID(subTask.getEpicId());
-                epic.addSubTask(subTask);
-                manager.updateEpic(epic);
+                subTask.setEpic(epic);
+                manager.createSubTask(subTask);
             }
             case TASK -> manager.createTask(task);
             default -> throw new IllegalArgumentException("Неизвестный тип задачи: " + typeTasks);
@@ -77,25 +82,39 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         TaskStatus taskStatus = TaskStatus.valueOf(parts[3].trim());
         String description = parts[4].trim();
 
+        Duration duration = null;
+        if (parts.length > 5 && !parts[5].isEmpty()) {
+            duration = Duration.ofMinutes(Long.parseLong(parts[5].trim()));
+        }
+
+        LocalDateTime startTime = null;
+        if (parts.length > 6 && !parts[6].isEmpty()) {
+            startTime = LocalDateTime.parse(parts[6].trim());
+        }
+
         switch (typeTasks) {
             case EPIC -> {
                 Epic epic = new Epic(taskName, description);
                 epic.setId(id);
                 epic.setTaskStatus(taskStatus);
+                epic.setDuration(duration);
+                epic.setStartTime(startTime);
                 return epic;
             }
             case TASK -> {
-                Task task = new Task(taskName, description);
+                Task task = new Task(taskName, description, startTime, duration);
                 task.setId(id);
                 task.setTaskStatus(taskStatus);
+                task.setDuration(duration);
                 return task;
             }
             case SUBTASK -> {
-                int epicId = Integer.parseInt(parts[5].trim());
-                SubTask subTask = new SubTask(taskName, description);
+                int epicId = Integer.parseInt(parts[7].trim());
+                SubTask subTask = new SubTask(taskName, description, startTime, duration);
                 subTask.setId(id);
                 subTask.setEpicId(epicId);
                 subTask.setTaskStatus(taskStatus);
+                subTask.setDuration(duration);
                 return subTask;
             }
             default -> throw new IllegalArgumentException("Неизвестный тип задачи: " + typeTasks);
@@ -106,19 +125,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         File file1 = new File("task.csv");
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file1);
 
-        Task task = new Task("Task", "new Task");
-        Task task1 = new Task("Task1", "new Task1");
+        Task task = new Task("Task", "new Task",
+                LocalDateTime.of(2025, 9, 8, 10, 15), Duration.ofMinutes(15));
+        Task task1 = new Task("Task1", "new Task1",
+                LocalDateTime.of(2025, 9, 8, 10, 30), Duration.ofMinutes(15));
 
         Epic epic = new Epic("Epic", "new Epic");
         Epic epic1 = new Epic("Epic1", "new Epic1");
 
-        SubTask subTaskForEpic = new SubTask("SubTaskForEpic1", "new SubTaskForEpic1");
-        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic2", "new SubTaskForEpic2");
-        SubTask subTaskForEpic2 = new SubTask("SubTaskForEpic3", "new SubTaskForEpic3");
+        SubTask subTaskForEpic = new SubTask("SubTaskForEpic1", "new SubTaskForEpic1",
+                LocalDateTime.of(2025, 9, 8, 10, 45), Duration.ofMinutes(15));
+        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic2", "new SubTaskForEpic2",
+                LocalDateTime.of(2025, 9, 8, 11, 00), Duration.ofMinutes(15));
+        SubTask subTaskForEpic2 = new SubTask("SubTaskForEpic3", "new SubTaskForEpic3",
+                LocalDateTime.of(2025, 9, 8, 11, 15), Duration.ofMinutes(15));
 
-        epic.addSubTask(subTaskForEpic);
-        epic.addSubTask(subTaskForEpic1);
-        epic1.addSubTask(subTaskForEpic2);
+        subTaskForEpic.setEpic(epic);
+        subTaskForEpic1.setEpic(epic);
+        subTaskForEpic2.setEpic(epic1);
 
         fileBackedTaskManager.createTask(task);
         fileBackedTaskManager.createTask(task1);
@@ -128,26 +152,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         fileBackedTaskManager.createSubTask(subTaskForEpic1);
         fileBackedTaskManager.createSubTask(subTaskForEpic2);
 
-        fileBackedTaskManager = loadFromFile(file1);
-        FileBackedTaskManager fileBackedTaskManager1 = loadFromFile(file1);
+        fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file1);
 
-        System.out.println("Вывод из 'fileBackedTaskManager'");
-        System.out.println(fileBackedTaskManager.getAllTasks());
-        System.out.println();
-        System.out.println(fileBackedTaskManager.getAllEpicTasks());
-        System.out.println();
-        System.out.println(fileBackedTaskManager.getAllSubTasks());
-        System.out.println("-----------");
-        System.out.println();
-
-        System.out.println("Вывод из 'fileBackedTaskManager1'");
-        System.out.println(fileBackedTaskManager1.getAllTasks());
-        System.out.println();
-        System.out.println(fileBackedTaskManager1.getAllEpicTasks());
-        System.out.println();
-        System.out.println(fileBackedTaskManager1.getAllSubTasks());
-        System.out.println("-----------");
-        System.out.println();
+        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
     }
 
     private void initFile() {
@@ -156,7 +163,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 file.createNewFile();
 
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                    writer.write("id,type,name,status,description,epic");
+                    writer.write("id,type,name,status,description,duration,startTime,epic");
                     writer.newLine();
                 }
             }
@@ -167,7 +174,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Task createTask(Task task) {
+        if (!timeGrid.canSchedule(task)) {
+            throw new IllegalArgumentException("Задача пересекается по времени с другой");
+        }
+
         Task created = super.createTask(task);
+        timeGrid.schedule(task);
         save();
         return created;
     }
@@ -181,7 +193,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public SubTask createSubTask(SubTask task) {
+        if (!timeGrid.canSchedule(task)) {
+            throw new IllegalArgumentException("Подзадача пересекается по времени с другой");
+        }
+
         SubTask created = super.createSubTask(task);
+        timeGrid.schedule(task);
         save();
         return created;
     }
@@ -202,6 +219,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
+    public List<Task> getPrioritizedTasks() {
+        return super.getPrioritizedTasks();
+    }
+
+    @Override
     public Task updateTask(Task task) {
         Task updeted = super.updateTask(task);
         save();
@@ -218,32 +240,46 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public SubTask updateSubTask(SubTask task) {
         SubTask updeted = super.updateSubTask(task);
+        save();
         return updeted;
     }
 
     @Override
-    public void removeTaskByID(int idTask) {
-        super.removeTaskByID(idTask);
+    public Task removeTaskByID(int idTask) {
+        Task task = super.removeTaskByID(idTask);
+
+        if (task != null) {
+            timeGrid.unschedule(task);
+        }
+
         save();
+        return task;
     }
 
     @Override
-    public void removeEpicByID(int idTask) {
-        super.removeEpicByID(idTask);
+    public Epic removeEpicByID(int idTask) {
+        Epic epic = super.removeEpicByID(idTask);
         save();
+        return epic;
     }
 
     @Override
-    public void removeSubTaskByID(int idTask) {
-        super.removeSubTaskByID(idTask);
+    public SubTask removeSubTaskByID(int idTask) {
+        SubTask subTask = super.removeSubTaskByID(idTask);
+
+        if (subTask != null) {
+            timeGrid.unschedule(subTask);
+        }
+
         save();
+        return subTask;
     }
 
     private void save() {
         if (isLoading) return;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic");
+            writer.write("id,type,name,status,description,duration,startTime,epic");
             writer.newLine();
 
             for (Task task : getAllTasks()) {
@@ -268,10 +304,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private String toString(Task task) {
         String type = task.getClass().getSimpleName().toUpperCase();
         String epicId = "";
+        String duration = task.getDuration() != null ? String.valueOf(task.getDuration().toMinutes()) : "";
+        String startTime = task.getStartTime() != null ? task.getStartTime().toString() : "";
 
         if (task instanceof SubTask) {
             epicId = String.valueOf(((SubTask) task).getEpicId());
         }
-        return String.join(",", String.valueOf(task.getId()), type, task.getTaskName(), task.getTaskStatus().toString(), task.getDescription(), epicId);
+        return String.join(",",
+                String.valueOf(task.getId()),
+                type,
+                task.getTaskName(),
+                task.getTaskStatus().toString(),
+                task.getDescription(),
+                duration,
+                startTime,
+                epicId);
     }
 }

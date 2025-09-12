@@ -3,6 +3,8 @@ package task;
 import enums.TaskStatus;
 import enums.TypeTasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -11,19 +13,25 @@ public class Task {
     private String taskName;
     private TaskStatus taskStatus;
     private String description;
+    private Duration duration;
+    private LocalDateTime startTime;
 
-    public Task(String taskName, String description) {
+    public Task(String taskName, String description, LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.taskStatus = TaskStatus.NEW;
         this.description = description;
         this.typeTasks = TypeTasks.TASK;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
-    public Task(String taskName, String description, TypeTasks typeTasks) {
+    public Task(String taskName, String description, TypeTasks typeTasks, LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.taskStatus = TaskStatus.NEW;
         this.description = description;
         this.typeTasks = typeTasks;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     @Override
@@ -71,7 +79,22 @@ public class Task {
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
+        if (this.taskStatus == taskStatus) return;
+
         this.taskStatus = taskStatus;
+
+        switch (taskStatus) {
+            case IN_PROGRESS -> {
+                startTime = Objects.requireNonNullElseGet(startTime, LocalDateTime::now);
+            }
+            case DONE -> {
+                if (startTime != null) {
+                    duration = Duration.between(startTime, LocalDateTime.now());
+                } else {
+                    duration = Duration.ZERO;
+                }
+            }
+        }
     }
 
     public String getDescription() {
@@ -88,5 +111,30 @@ public class Task {
 
     public void setTypeTasks() {
         this.typeTasks = typeTasks;
+    }
+
+    public LocalDateTime getEndTime() throws NullPointerException {
+        LocalDateTime newDateTime = getStartTime();
+        if (newDateTime != null && duration != null) {
+            return newDateTime.plus(duration);
+        }
+
+        return null;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime()  {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 }
