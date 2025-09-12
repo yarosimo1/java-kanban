@@ -72,26 +72,31 @@ public class Epic extends Task {
             return;
         }
 
-        Duration totalDuration = subTasks.stream()
+        this.setDuration(findTotalDuration());
+        this.setStartTime(findMinStart());
+        endTime = findMaxEnd();
+    }
+
+    private Duration findTotalDuration() {
+        return subTasks.stream()
                 .map(SubTask::getDuration)
                 .filter(Objects::nonNull)
                 .reduce(Duration.ZERO, Duration::plus);
+    }
 
-        LocalDateTime minStart = subTasks.stream()
+    private LocalDateTime findMinStart() {
+        return subTasks.stream()
                 .map(SubTask::getStartTime)
                 .filter(Objects::nonNull)
                 .min(LocalDateTime::compareTo)
                 .orElse(null);
+    }
 
-        LocalDateTime maxEnd = subTasks.stream()
+    private LocalDateTime findMaxEnd() {
+        return subTasks.stream()
                 .map(SubTask::getEndTime)
                 .filter(Objects::nonNull)
                 .max(LocalDateTime::compareTo)
                 .orElse(null);
-
-        this.setDuration(totalDuration);
-        this.setStartTime(minStart);
-        endTime = maxEnd;
     }
-
 }
