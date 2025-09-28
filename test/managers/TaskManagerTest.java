@@ -3,7 +3,7 @@ package managers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
-import task.SubTask;
+import task.Subtask;
 import task.Task;
 
 import java.time.Duration;
@@ -31,8 +31,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         return new Epic("Epic Task", "Epic description");
     }
 
-    private SubTask makeSubTask(Epic epic) {
-        SubTask subTask =new SubTask("Sub Task", "Sub description",
+    private Subtask makeSubTask(Epic epic) {
+        Subtask subTask =new Subtask("Sub Task", "Sub description",
                 LocalDateTime.now().plusHours(1), Duration.ofMinutes(45));
         subTask.setEpic(epic);
         return subTask;
@@ -77,7 +77,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = makeEpic();
         taskManager.createEpic(epic);
 
-        SubTask sub = makeSubTask(epic);
+        Subtask sub = makeSubTask(epic);
         sub.setEpic(epic);
         taskManager.createSubTask(sub);
 
@@ -114,7 +114,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = makeEpic();
         taskManager.createEpic(epic);
 
-        SubTask sub = makeSubTask(epic);
+        Subtask sub = makeSubTask(epic);
         taskManager.createSubTask(sub);
 
         Epic removedEpic = taskManager.removeEpicByID(epic.getId());
@@ -129,10 +129,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = makeEpic();
         taskManager.createEpic(epic);
 
-        SubTask sub = makeSubTask(epic);
+        Subtask sub = makeSubTask(epic);
         taskManager.createSubTask(sub);
 
-        SubTask removed = taskManager.removeSubTaskByID(sub.getId());
+        Subtask removed = taskManager.removeSubTaskByID(sub.getId());
         assertNotNull(removed);
 
         assertTrue(taskManager.getAllSubTasks().isEmpty());

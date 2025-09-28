@@ -3,7 +3,7 @@ package managers;
 
 import org.junit.jupiter.api.Test;
 import task.Epic;
-import task.SubTask;
+import task.Subtask;
 import task.Task;
 
 import java.time.Duration;
@@ -24,7 +24,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         Epic epic = new Epic("Epic", "Epic description");
         manager.createEpic(epic);
 
-        SubTask subTask = new SubTask("SubTask", "SubTask description",
+        Subtask subTask = new Subtask("SubTask", "SubTask description",
                 LocalDateTime.now(), Duration.ofMinutes(15));
         subTask.setEpic(epic);
         manager.createSubTask(subTask);

@@ -1,7 +1,7 @@
 package managers;
 
 import task.Epic;
-import task.SubTask;
+import task.Subtask;
 import task.Task;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public interface TaskManager {
 
     ArrayList<Epic> getAllEpicTasks();
 
-    ArrayList<SubTask> getAllSubTasks();
+    ArrayList<Subtask> getAllSubTasks();
 
     List<Task> getPrioritizedTasks();
 
@@ -28,25 +28,25 @@ public interface TaskManager {
 
     Epic getEpicByID(int idTask);
 
-    SubTask getSubTaskByID(int idTask);
+    Subtask getSubTaskByID(int idTask);
 
     Task createTask(Task task);
 
     Epic createEpic(Epic task);
 
-    SubTask createSubTask(SubTask task);
+    Subtask createSubTask(Subtask task);
 
     Task updateTask(Task task);
 
     Epic updateEpic(Epic task);
 
-    SubTask updateSubTask(SubTask task);
+    Subtask updateSubTask(Subtask task);
 
     Task removeTaskByID(int idTask);
 
     Epic removeEpicByID(int idTask);
 
-    SubTask removeSubTaskByID(int idTask);
+    Subtask removeSubTaskByID(int idTask);
 
     void removeFromPrioritized(Task task);
 

@@ -26,12 +26,8 @@ public class Task {
     }
 
     public Task(String taskName, String description, TypeTasks typeTasks, LocalDateTime startTime, Duration duration) {
-        this.taskName = taskName;
-        this.taskStatus = TaskStatus.NEW;
-        this.description = description;
+        this(taskName, description, startTime, duration);
         this.typeTasks = typeTasks;
-        this.startTime = startTime;
-        this.duration = duration;
     }
 
     @Override

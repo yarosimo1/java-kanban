@@ -4,7 +4,7 @@ import enums.TaskStatus;
 import enums.TypeTasks;
 import exceptions.ManagerSaveException;
 import task.Epic;
-import task.SubTask;
+import task.Subtask;
 import task.Task;
 import grid.TimeGrid;
 
@@ -59,7 +59,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         switch (typeTasks) {
             case EPIC -> manager.createEpic((Epic) task);
             case SUBTASK -> {
-                SubTask subTask = (SubTask) task;
+                Subtask subTask = (Subtask) task;
                 Epic epic = manager.getEpicByID(subTask.getEpicId());
                 subTask.setEpic(epic);
                 manager.createSubTask(subTask);
@@ -110,7 +110,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             case SUBTASK -> {
                 int epicId = Integer.parseInt(parts[7].trim());
-                SubTask subTask = new SubTask(taskName, description, startTime, duration);
+                Subtask subTask = new Subtask(taskName, description, startTime, duration);
                 subTask.setId(id);
                 subTask.setEpicId(epicId);
                 subTask.setTaskStatus(taskStatus);
@@ -119,42 +119,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             default -> throw new IllegalArgumentException("Неизвестный тип задачи: " + typeTasks);
         }
-    }
-
-    public static void main(String[] args) {
-        File file1 = new File("task.csv");
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file1);
-
-        Task task = new Task("Task", "new Task",
-                LocalDateTime.of(2025, 9, 8, 10, 15), Duration.ofMinutes(15));
-        Task task1 = new Task("Task1", "new Task1",
-                LocalDateTime.of(2025, 9, 8, 10, 30), Duration.ofMinutes(15));
-
-        Epic epic = new Epic("Epic", "new Epic");
-        Epic epic1 = new Epic("Epic1", "new Epic1");
-
-        SubTask subTaskForEpic = new SubTask("SubTaskForEpic1", "new SubTaskForEpic1",
-                LocalDateTime.of(2025, 9, 8, 10, 45), Duration.ofMinutes(15));
-        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic2", "new SubTaskForEpic2",
-                LocalDateTime.of(2025, 9, 8, 11, 00), Duration.ofMinutes(15));
-        SubTask subTaskForEpic2 = new SubTask("SubTaskForEpic3", "new SubTaskForEpic3",
-                LocalDateTime.of(2025, 9, 8, 11, 15), Duration.ofMinutes(15));
-
-        subTaskForEpic.setEpic(epic);
-        subTaskForEpic1.setEpic(epic);
-        subTaskForEpic2.setEpic(epic1);
-
-        fileBackedTaskManager.createTask(task);
-        fileBackedTaskManager.createTask(task1);
-        fileBackedTaskManager.createEpic(epic);
-        fileBackedTaskManager.createEpic(epic1);
-        fileBackedTaskManager.createSubTask(subTaskForEpic);
-        fileBackedTaskManager.createSubTask(subTaskForEpic1);
-        fileBackedTaskManager.createSubTask(subTaskForEpic2);
-
-        fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file1);
-
-        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
     }
 
     private void initFile() {
@@ -192,12 +156,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public SubTask createSubTask(SubTask task) {
+    public Subtask createSubTask(Subtask task) {
         if (!timeGrid.canSchedule(task)) {
             throw new IllegalArgumentException("Подзадача пересекается по времени с другой");
         }
 
-        SubTask created = super.createSubTask(task);
+        Subtask created = super.createSubTask(task);
         timeGrid.schedule(task);
         save();
         return created;
@@ -214,7 +178,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getAllSubTasks() {
+    public ArrayList<Subtask> getAllSubTasks() {
         return super.getAllSubTasks();
     }
 
@@ -238,8 +202,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public SubTask updateSubTask(SubTask task) {
-        SubTask updeted = super.updateSubTask(task);
+    public Subtask updateSubTask(Subtask task) {
+        Subtask updeted = super.updateSubTask(task);
         save();
         return updeted;
     }
@@ -264,8 +228,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public SubTask removeSubTaskByID(int idTask) {
-        SubTask subTask = super.removeSubTaskByID(idTask);
+    public Subtask removeSubTaskByID(int idTask) {
+        Subtask subTask = super.removeSubTaskByID(idTask);
 
         if (subTask != null) {
             timeGrid.unschedule(subTask);
@@ -292,7 +256,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.newLine();
             }
 
-            for (SubTask subTask : getAllSubTasks()) {
+            for (Subtask subTask : getAllSubTasks()) {
                 writer.write(toString(subTask));
                 writer.newLine();
             }
@@ -307,8 +271,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String duration = task.getDuration() != null ? String.valueOf(task.getDuration().toMinutes()) : "";
         String startTime = task.getStartTime() != null ? task.getStartTime().toString() : "";
 
-        if (task instanceof SubTask) {
-            epicId = String.valueOf(((SubTask) task).getEpicId());
+        if (task instanceof Subtask) {
+            epicId = String.valueOf(((Subtask) task).getEpicId());
         }
         return String.join(",",
                 String.valueOf(task.getId()),

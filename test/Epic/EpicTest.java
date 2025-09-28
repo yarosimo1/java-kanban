@@ -5,7 +5,7 @@ import managers.InMemoryTaskManager;
 import managers.TaskManager;
 import org.junit.jupiter.api.Test;
 import task.Epic;
-import task.SubTask;
+import task.Subtask;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -19,11 +19,11 @@ public class EpicTest {
     @Test
     public void epicStatusShouldBeNewIfAllSubtasksAreNew() {
         Epic epic = taskManager.createEpic(new Epic("Epic", "Test Epic"));
-        SubTask sub1 = new SubTask("Sub1", "desc",
+        Subtask sub1 = new Subtask("Sub1", "desc",
                 LocalDateTime.now().plusHours(1), Duration.ofMinutes(15));
         sub1.setEpic(epic);
 
-        SubTask sub2 = new SubTask("Sub2", "desc",
+        Subtask sub2 = new Subtask("Sub2", "desc",
                 LocalDateTime.now().plusHours(2), Duration.ofMinutes(15));
         sub2.setEpic(epic);
 
@@ -38,11 +38,11 @@ public class EpicTest {
     @Test
     public void epicStatusShouldBeDoneIfAllSubtasksAreDone() {
         Epic epic = taskManager.createEpic(new Epic("Epic", "Test Epic"));
-        SubTask sub1 = new SubTask("Sub1", "desc",
+        Subtask sub1 = new Subtask("Sub1", "desc",
                 LocalDateTime.now().plusHours(1), Duration.ofMinutes(15));
         sub1.setEpic(epic);
 
-        SubTask sub2 = new SubTask("Sub2", "desc",
+        Subtask sub2 = new Subtask("Sub2", "desc",
                 LocalDateTime.now().plusHours(2), Duration.ofMinutes(15));
         sub2.setEpic(epic);
 
@@ -63,11 +63,11 @@ public class EpicTest {
     @Test
     public void epicStatusShouldBeInProgressIfSubtasksAreNewAndDone() {
         Epic epic = taskManager.createEpic(new Epic("Epic", "Test Epic"));
-        SubTask sub1 = new SubTask("Sub1", "desc",
+        Subtask sub1 = new Subtask("Sub1", "desc",
                 LocalDateTime.now().plusHours(1), Duration.ofMinutes(15));
         sub1.setEpic(epic);
 
-        SubTask sub2 = new SubTask("Sub2", "desc",
+        Subtask sub2 = new Subtask("Sub2", "desc",
                 LocalDateTime.now().plusHours(2), Duration.ofMinutes(15));
         sub2.setTaskStatus(TaskStatus.DONE);
         sub2.setEpic(epic);
@@ -83,12 +83,12 @@ public class EpicTest {
     @Test
     public void epicStatusShouldBeInProgressIfAnySubtaskInProgress() {
         Epic epic = taskManager.createEpic(new Epic("Epic", "Test Epic"));
-        SubTask sub1 = new SubTask("Sub1", "desc",
+        Subtask sub1 = new Subtask("Sub1", "desc",
                 LocalDateTime.now().plusHours(1), Duration.ofMinutes(15));
         sub1.setTaskStatus(TaskStatus.IN_PROGRESS);
         sub1.setEpic(epic);
 
-        SubTask sub2 = new SubTask("Sub2", "desc",
+        Subtask sub2 = new Subtask("Sub2", "desc",
                 LocalDateTime.now().plusHours(2), Duration.ofMinutes(15));
         sub2.setEpic(epic);
 
