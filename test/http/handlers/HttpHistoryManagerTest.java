@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 import gson.GsonFactory;
 import managers.InMemoryTaskManager;
+import managers.Managers;
 import managers.TaskManager;
 import org.junit.jupiter.api.*;
 import task.Task;
@@ -44,7 +45,7 @@ public class HttpHistoryManagerTest {
 
     @BeforeEach
     void beforeEach() {
-
+        Managers.getDefaultHistoryManager().clear();
     }
 
     @Test

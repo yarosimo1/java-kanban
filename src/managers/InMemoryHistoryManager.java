@@ -35,6 +35,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
+    @Override
+    public void clear() {
+        history.clear();
+        head = null;
+        tail = null;
+    }
+
     private void linkLast(Task task) {
         Node<Task> newNode = new Node<>(tail, task, null);
 
