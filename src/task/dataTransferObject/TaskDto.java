@@ -14,7 +14,7 @@ public class TaskDto {
     public Duration duration;
     public TaskStatus taskStatus;
 
-    public TaskDto (Task task) {
+    public TaskDto(Task task) {
         this.id = task.getId();
         this.taskName = task.getTaskName();
         this.description = task.getDescription();
