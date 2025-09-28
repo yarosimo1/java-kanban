@@ -3,8 +3,8 @@ package http.handlers;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 import gson.GsonFactory;
-import managers.HistoryManager;
-import managers.Managers;
+import managers.InMemoryTaskManager;
+import managers.TaskManager;
 import org.junit.jupiter.api.*;
 import task.Task;
 import task.dataTransferObject.TaskDto;
@@ -24,11 +24,11 @@ public class HttpHistoryManagerTest {
     private static HttpServer server;
     private static HttpClient client;
     private static Gson gson = GsonFactory.createGson();
-    private static HistoryManager historyManager;
+    private static TaskManager manager;
 
     @BeforeAll
     static void beforeAll() throws IOException {
-        historyManager = Managers.getDefaultHistoryManager();
+        manager = new InMemoryTaskManager();
 
         server = HttpServer.create(new InetSocketAddress(8081), 0);
         server.createContext("/history", new HistoryHandler());
@@ -63,11 +63,9 @@ public class HttpHistoryManagerTest {
 
     @Test
     void testGetHistoryWithTasks() throws IOException, InterruptedException {
-        // добавим в историю задачу
-        Task task = new Task("History Task", "Desc",
-                LocalDateTime.now(), Duration.ofMinutes(15));
-        task.setId(1);
-        historyManager.add(task);
+        Task task = manager.createTask(new Task("History Task", "Desc",
+                LocalDateTime.now(), Duration.ofMinutes(15)));
+        manager.getTaskByID(task.getId());
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8081/history"))
