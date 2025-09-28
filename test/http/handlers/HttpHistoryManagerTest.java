@@ -3,7 +3,6 @@ package http.handlers;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 import gson.GsonFactory;
-import http.handlers.HistoryHandler;
 import managers.HistoryManager;
 import managers.Managers;
 import org.junit.jupiter.api.*;

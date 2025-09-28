@@ -1,5 +1,6 @@
 package managers;
 
+import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
@@ -32,9 +33,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     private Subtask makeSubTask(Epic epic) {
-        Subtask subTask =new Subtask("Sub Task", "Sub description",
-                LocalDateTime.now().plusHours(1), Duration.ofMinutes(45));
-        subTask.setEpic(epic);
+        Subtask subTask = new Subtask("Sub Task", "Sub description",
+                LocalDateTime.now().plusHours(1), Duration.ofMinutes(45), epic);
         return subTask;
 
     }
@@ -58,9 +58,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnNullForUnknownId() {
-        assertNull(taskManager.getTaskByID(999));
-        assertNull(taskManager.getEpicByID(999));
-        assertNull(taskManager.getSubTaskByID(999));
+        NotFoundException taskEx = assertThrows(NotFoundException.class,
+                () -> taskManager.getTaskByID(999));
+        assertEquals("Task with id=999 not found", taskEx.getMessage());
+
+        NotFoundException epicEx = assertThrows(NotFoundException.class,
+                () -> taskManager.getEpicByID(999));
+        assertEquals("Epic with id=999 not found", epicEx.getMessage());
+
+        NotFoundException subtaskEx = assertThrows(NotFoundException.class,
+                () -> taskManager.getSubTaskByID(999));
+        assertEquals("Subtask with id=999 not found", subtaskEx.getMessage());
     }
 
     @Test
@@ -126,11 +134,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldRemoveSubTaskByIdAndUpdateEpic() {
-        Epic epic = makeEpic();
-        taskManager.createEpic(epic);
+        Epic epic = taskManager.createEpic(makeEpic());
 
-        Subtask sub = makeSubTask(epic);
-        taskManager.createSubTask(sub);
+        Subtask sub = taskManager.createSubTask(makeSubTask(epic));
 
         Subtask removed = taskManager.removeSubTaskByID(sub.getId());
         assertNotNull(removed);
