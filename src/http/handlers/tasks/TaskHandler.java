@@ -9,7 +9,6 @@ import exceptions.NotFoundException;
 import http.endpoints.Endpoint;
 import http.handlers.BaseHttpHandler;
 import managers.TaskManager;
-import task.Subtask;
 import task.Task;
 import task.dataTransferObject.TaskDto;
 
