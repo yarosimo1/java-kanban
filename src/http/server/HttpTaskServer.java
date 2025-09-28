@@ -21,7 +21,7 @@ public class HttpTaskServer {
     private static HttpServer httpServer;
     private static final Gson gson = GsonFactory.createGson();
 
-    public HttpTaskServer (TaskManager manager) {
+    public HttpTaskServer(TaskManager manager) {
         this(manager, 8080);
     }
 
