@@ -60,7 +60,7 @@ public class HttpTaskManagerEpicsTest {
     }
 
     @Test
-    void testUpdateEpic() throws IOException, InterruptedException {
+    public void testUpdateEpic() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Big story");
         manager.createEpic(epic);
 

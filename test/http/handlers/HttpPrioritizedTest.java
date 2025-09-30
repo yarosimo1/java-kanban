@@ -20,14 +20,14 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PrioritizedHandlerTest {
+public class HttpPrioritizedTest {
     private static HttpServer server;
     private static HttpClient client;
     private static Gson gson = GsonFactory.createGson();
     private static TaskManager manager;
 
     @BeforeAll
-    static void beforeAll() throws IOException {
+    public static void beforeAll() throws IOException {
         manager = new InMemoryTaskManager();
         server = HttpServer.create(new InetSocketAddress(8082), 0);
         server.createContext("/prioritized", new PrioritizedHandler(manager));
@@ -37,19 +37,19 @@ class PrioritizedHandlerTest {
     }
 
     @AfterAll
-    static void afterAll() {
+    public static void afterAll() {
         server.stop(0);
     }
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         manager.clearTasks();
         manager.clearEpicTasks();
         manager.clearSubTasks();
     }
 
     @Test
-    void testGetPrioritizedWhenEmpty() throws IOException, InterruptedException {
+    public void testGetPrioritizedWhenEmpty() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8082/prioritized"))
                 .GET()
@@ -63,7 +63,7 @@ class PrioritizedHandlerTest {
     }
 
     @Test
-    void testGetPrioritizedWithTasks() throws IOException, InterruptedException {
+    public void testGetPrioritizedWithTasks() throws IOException, InterruptedException {
         // добавляем 2 задачи с разными startTime
         Task task1 = new Task("Task 1", "Desc 1", LocalDateTime.now().plusHours(1), Duration.ofMinutes(30));
         Task task2 = new Task("Task 2", "Desc 2", LocalDateTime.now(), Duration.ofMinutes(20));
@@ -88,7 +88,7 @@ class PrioritizedHandlerTest {
     }
 
     @Test
-    void testUnknownEndpointReturns404() throws IOException, InterruptedException {
+    public void testUnknownEndpointReturns404() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8082/unknown"))
                 .GET()

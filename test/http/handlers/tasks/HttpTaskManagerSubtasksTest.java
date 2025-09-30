@@ -64,7 +64,7 @@ public class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    void testUpdateSubtask() throws IOException, InterruptedException {
+    public void testUpdateSubtask() throws IOException, InterruptedException {
         // --- создаём эпик для подзадачи ---
         Epic epic = new Epic("Epic for subtask", "Epic desc");
         String epicJson = gson.toJson(new EpicDto(epic));

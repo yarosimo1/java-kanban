@@ -59,7 +59,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void testUpdateTask() throws IOException, InterruptedException {
+    public void testUpdateTask() throws IOException, InterruptedException {
         Task task = new Task("Test Task", "Description",
                 LocalDateTime.now(), Duration.ofMinutes(15));
         String json = gson.toJson(new TaskDto(task));

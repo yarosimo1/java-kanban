@@ -28,7 +28,7 @@ public class HttpHistoryManagerTest {
     private static TaskManager manager;
 
     @BeforeAll
-    static void beforeAll() throws IOException {
+    public static void beforeAll() throws IOException {
         manager = new InMemoryTaskManager();
 
         server = HttpServer.create(new InetSocketAddress(8081), 0);
@@ -39,17 +39,17 @@ public class HttpHistoryManagerTest {
     }
 
     @AfterAll
-    static void afterAll() {
+    public static void afterAll() {
         server.stop(0);
     }
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         Managers.getDefaultHistoryManager().clear();
     }
 
     @Test
-    void testGetHistoryWhenEmpty() throws IOException, InterruptedException {
+    public void testGetHistoryWhenEmpty() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8081/history"))
                 .GET()
@@ -63,7 +63,7 @@ public class HttpHistoryManagerTest {
     }
 
     @Test
-    void testGetHistoryWithTasks() throws IOException, InterruptedException {
+    public void testGetHistoryWithTasks() throws IOException, InterruptedException {
         Task task = manager.createTask(new Task("History Task", "Desc",
                 LocalDateTime.now(), Duration.ofMinutes(15)));
         manager.getTaskByID(task.getId());
@@ -82,7 +82,7 @@ public class HttpHistoryManagerTest {
     }
 
     @Test
-    void testUnknownEndpointReturns404() throws IOException, InterruptedException {
+    public void testUnknownEndpointReturns404() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8081/unknown"))
                 .GET()
