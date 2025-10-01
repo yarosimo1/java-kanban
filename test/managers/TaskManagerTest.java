@@ -1,9 +1,10 @@
 package managers;
 
+import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
-import task.SubTask;
+import task.Subtask;
 import task.Task;
 
 import java.time.Duration;
@@ -31,10 +32,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         return new Epic("Epic Task", "Epic description");
     }
 
-    private SubTask makeSubTask(Epic epic) {
-        SubTask subTask =new SubTask("Sub Task", "Sub description",
-                LocalDateTime.now().plusHours(1), Duration.ofMinutes(45));
-        subTask.setEpic(epic);
+    private Subtask makeSubTask(Epic epic) {
+        Subtask subTask = new Subtask("Sub Task", "Sub description",
+                LocalDateTime.now().plusHours(1), Duration.ofMinutes(45), epic);
         return subTask;
 
     }
@@ -58,9 +58,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnNullForUnknownId() {
-        assertNull(taskManager.getTaskByID(999));
-        assertNull(taskManager.getEpicByID(999));
-        assertNull(taskManager.getSubTaskByID(999));
+        NotFoundException taskEx = assertThrows(NotFoundException.class,
+                () -> taskManager.getTaskByID(999));
+        assertEquals("Task with id=999 not found", taskEx.getMessage());
+
+        NotFoundException epicEx = assertThrows(NotFoundException.class,
+                () -> taskManager.getEpicByID(999));
+        assertEquals("Epic with id=999 not found", epicEx.getMessage());
+
+        NotFoundException subtaskEx = assertThrows(NotFoundException.class,
+                () -> taskManager.getSubTaskByID(999));
+        assertEquals("Subtask with id=999 not found", subtaskEx.getMessage());
     }
 
     @Test
@@ -77,7 +85,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = makeEpic();
         taskManager.createEpic(epic);
 
-        SubTask sub = makeSubTask(epic);
+        Subtask sub = makeSubTask(epic);
         sub.setEpic(epic);
         taskManager.createSubTask(sub);
 
@@ -114,7 +122,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = makeEpic();
         taskManager.createEpic(epic);
 
-        SubTask sub = makeSubTask(epic);
+        Subtask sub = makeSubTask(epic);
         taskManager.createSubTask(sub);
 
         Epic removedEpic = taskManager.removeEpicByID(epic.getId());
@@ -126,13 +134,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldRemoveSubTaskByIdAndUpdateEpic() {
-        Epic epic = makeEpic();
-        taskManager.createEpic(epic);
+        Epic epic = taskManager.createEpic(makeEpic());
 
-        SubTask sub = makeSubTask(epic);
-        taskManager.createSubTask(sub);
+        Subtask sub = taskManager.createSubTask(makeSubTask(epic));
 
-        SubTask removed = taskManager.removeSubTaskByID(sub.getId());
+        Subtask removed = taskManager.removeSubTaskByID(sub.getId());
         assertNotNull(removed);
 
         assertTrue(taskManager.getAllSubTasks().isEmpty());

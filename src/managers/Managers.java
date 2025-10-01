@@ -13,4 +13,7 @@ public abstract class Managers {
         return new FileBackedTaskManager(file);
     }
 
+    public static TaskManager uploadTaskManager(File file) {
+        return FileBackedTaskManager.loadFromFile(file);
+    }
 }

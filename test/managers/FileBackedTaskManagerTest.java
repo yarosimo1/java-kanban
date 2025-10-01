@@ -2,7 +2,7 @@ package managers;
 
 import org.junit.jupiter.api.Test;
 import task.Epic;
-import task.SubTask;
+import task.Subtask;
 import task.Task;
 
 import java.io.File;
@@ -46,24 +46,24 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         Epic epic = new Epic("Epic", "new Epic");
         Epic epic1 = new Epic("Epic1", "new Epic1");
 
-        SubTask subTaskForEpic = new SubTask("SubTaskForEpic1", "new SubTaskForEpic1",
+        Subtask subtaskForEpic = new Subtask("SubTaskForEpic1", "new SubTaskForEpic1",
                 LocalDateTime.of(2025, 1, 1, 11, 0), Duration.ofMinutes(15));
-        SubTask subTaskForEpic1 = new SubTask("SubTaskForEpic2", "new SubTaskForEpic2",
+        Subtask subtaskForEpic1 = new Subtask("SubTaskForEpic2", "new SubTaskForEpic2",
                 LocalDateTime.of(2025, 1, 1, 12, 0), Duration.ofMinutes(15));
-        SubTask subTaskForEpic2 = new SubTask("SubTaskForEpic3", "new SubTaskForEpic3",
+        Subtask subtaskForEpic2 = new Subtask("SubTaskForEpic3", "new SubTaskForEpic3",
                 LocalDateTime.of(2025, 1, 1, 13, 0), Duration.ofMinutes(15));
 
-        epic.addSubTask(subTaskForEpic);
-        epic.addSubTask(subTaskForEpic1);
-        epic1.addSubTask(subTaskForEpic2);
+        epic.addSubTask(subtaskForEpic);
+        epic.addSubTask(subtaskForEpic1);
+        epic1.addSubTask(subtaskForEpic2);
 
         manager.createTask(task);
         manager.createTask(task1);
         manager.createEpic(epic);
         manager.createEpic(epic1);
-        manager.createSubTask(subTaskForEpic);
-        manager.createSubTask(subTaskForEpic1);
-        manager.createSubTask(subTaskForEpic2);
+        manager.createSubTask(subtaskForEpic);
+        manager.createSubTask(subtaskForEpic1);
+        manager.createSubTask(subtaskForEpic2);
 
         // загружаем из файла
         FileBackedTaskManager loaded = FileBackedTaskManager.loadFromFile(tempFile);
@@ -84,7 +84,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
     @Test
     public void testSubTaskScheduling_NoOverlap() {
-        SubTask newSub = new SubTask("NewSub", "Desc",
+        Subtask newSub = new Subtask("NewSub", "Desc",
                 LocalDateTime.of(2025, 9, 10, 14, 0), Duration.ofMinutes(15));
 
         assertDoesNotThrow(() -> {
@@ -94,9 +94,9 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
     @Test
     public void testSubTaskScheduling_Overlap() {
-        SubTask overlapping = new SubTask("OverlapSub", "Desc",
+        Subtask overlapping = new Subtask("OverlapSub", "Desc",
                 LocalDateTime.of(2025, 9, 10, 11, 0), Duration.ofMinutes(15));
-        SubTask overlapping1 = new SubTask("OverlapSub1", "Desc",
+        Subtask overlapping1 = new Subtask("OverlapSub1", "Desc",
                 LocalDateTime.of(2025, 9, 10, 11, 0), Duration.ofMinutes(15));
 
         // первая задача должна создаться нормально
@@ -112,7 +112,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
     @Test
     public void testTaskScheduling_NoOverlap() {
-        SubTask newSub = new SubTask("NewTask", "Desc",
+        Subtask newSub = new Subtask("NewTask", "Desc",
                 LocalDateTime.of(2025, 9, 10, 14, 0), Duration.ofMinutes(15));
 
         assertDoesNotThrow(() -> {
@@ -122,9 +122,9 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
     @Test
     public void testTaskScheduling_Overlap() {
-        Task overlapping = new SubTask("OverlapTask", "Desc",
+        Task overlapping = new Subtask("OverlapTask", "Desc",
                 LocalDateTime.of(2025, 9, 10, 11, 0), Duration.ofMinutes(15));
-        Task overlapping1 = new SubTask("OverlapTask", "Desc",
+        Task overlapping1 = new Subtask("OverlapTask", "Desc",
                 LocalDateTime.of(2025, 9, 10, 11, 0), Duration.ofMinutes(15));
 
         // первая задача должна создаться нормально

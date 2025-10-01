@@ -5,12 +5,17 @@ import enums.TypeTasks;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class SubTask extends Task {
+public class Subtask extends Task {
     private Epic epic;
     private int epicId;
 
-    public SubTask(String taskName, String description, LocalDateTime startTime, Duration duration) {
+    public Subtask(String taskName, String description, LocalDateTime startTime, Duration duration) {
         super(taskName, description, TypeTasks.SUBTASK, startTime, duration);
+    }
+
+    public Subtask(String taskName, String description, LocalDateTime startTime, Duration duration, Epic epic) {
+        this(taskName, description, startTime, duration);
+        this.epic = epic;
     }
 
     public Epic getEpic() {

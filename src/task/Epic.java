@@ -5,35 +5,37 @@ import enums.TypeTasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Epic extends Task {
-    private final List<SubTask> subTasks;
+    private final Map<Integer, Subtask> subtasks;
     private LocalDateTime endTime;
 
     public Epic(String taskName, String description) {
         super(taskName, description, TypeTasks.EPIC,null, null);
-        subTasks = new ArrayList<>();
+        subtasks = new HashMap<>();
     }
 
-    public List<SubTask> getSubTasks() {
-        return subTasks;
+    public List<Subtask> getSubTasks() {
+        return new ArrayList<>(subtasks.values());
     }
 
-    public void addSubTask(SubTask subTask) {
-        subTasks.add(subTask);
+    public Subtask getSubtaskById(int id) {
+        return subtasks.get(id);
+    }
+
+    public void addSubTask(Subtask subTask) {
+        subtasks.put(subTask.getId(), subTask);
         subTask.setEpic(this);
         subTask.setEpicId(this.getId());
     }
 
-    public void removeSubTask(SubTask subTask) {
-        subTasks.remove(subTask);
+    public void removeSubTask(Subtask subTask) {
+        subtasks.remove(subTask.getId());
     }
 
     public void clearSubTasks() {
-        subTasks.clear();
+        subtasks.clear();
     }
 
     public LocalDateTime getEndTime() {
@@ -45,14 +47,14 @@ public class Epic extends Task {
     }
 
     public void updateEpicStatus() {
-        if (subTasks.isEmpty()) {
+        if (subtasks.isEmpty()) {
             this.setTaskStatus(TaskStatus.NEW);
             return;
         }
 
-        boolean allNew = subTasks.stream()
+        boolean allNew = subtasks.values().stream()
                 .allMatch(sub -> sub.getTaskStatus() == TaskStatus.NEW);
-        boolean allDone = subTasks.stream()
+        boolean allDone = subtasks.values().stream()
                 .allMatch(sub -> sub.getTaskStatus() == TaskStatus.DONE);
 
         if (allDone) {
@@ -65,7 +67,7 @@ public class Epic extends Task {
     }
 
     public void updateEpicTime() {
-        if (subTasks.isEmpty()) {
+        if (subtasks.isEmpty()) {
             this.setDuration(Duration.ZERO);
             this.setStartTime(null);
             this.setEndTime(null);
@@ -78,23 +80,23 @@ public class Epic extends Task {
     }
 
     private Duration findTotalDuration() {
-        return subTasks.stream()
-                .map(SubTask::getDuration)
+        return subtasks.values().stream()
+                .map(Subtask::getDuration)
                 .filter(Objects::nonNull)
                 .reduce(Duration.ZERO, Duration::plus);
     }
 
     private LocalDateTime findMinStart() {
-        return subTasks.stream()
-                .map(SubTask::getStartTime)
+        return subtasks.values().stream()
+                .map(Subtask::getStartTime)
                 .filter(Objects::nonNull)
                 .min(LocalDateTime::compareTo)
                 .orElse(null);
     }
 
     private LocalDateTime findMaxEnd() {
-        return subTasks.stream()
-                .map(SubTask::getEndTime)
+        return subtasks.values().stream()
+                .map(Subtask::getEndTime)
                 .filter(Objects::nonNull)
                 .max(LocalDateTime::compareTo)
                 .orElse(null);
